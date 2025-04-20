@@ -1,5 +1,6 @@
 package com.hanium.smartdispenser.recipe.domain;
 
+import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -31,8 +32,14 @@ public class Recipe {
     private User createdBy;
 
     @OneToMany(mappedBy = "recipe")
-    private List<RecipeIngredient> recipeIngredient = new ArrayList<>();
+    private List<RecipeIngredient> recipeIngredientList = new ArrayList<>();
 
-
+    /**
+     * Recipe에 RecipeIngredient를 등록하고 양방향 연관관계 설정합니다.
+     */
+    public void addIngredient(Ingredient ingredient, int amount) {
+        RecipeIngredient ri = RecipeIngredient.of(this, ingredient, amount);
+        recipeIngredientList.add(ri);
+    }
 
 }

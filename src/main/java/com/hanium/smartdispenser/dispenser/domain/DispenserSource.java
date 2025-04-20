@@ -15,7 +15,10 @@ import static jakarta.persistence.FetchType.LAZY;
 public class DispenserSource {
 
     @Id @GeneratedValue
+    @Column(name = "dispenser_source_id")
     private Long id;
+    private int remaining;
+    private int capacity;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "dispenser_id")
@@ -24,5 +27,14 @@ public class DispenserSource {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
+
+
+    /**
+     * 연관관계 편의 메소드
+     * - Dispenser.addSource() 에서만 호출되어야 합니다.
+     */
+    public void assignDispenser(Dispenser dispenser) {
+        this.dispenser = dispenser;
+    }
 
 }

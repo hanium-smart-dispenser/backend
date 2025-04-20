@@ -2,6 +2,7 @@ package com.hanium.smartdispenser.user.domain;
 
 import com.hanium.smartdispenser.common.domain.BaseEntity;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
+import com.hanium.smartdispenser.history.domain.History;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,5 +28,23 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     List<Dispenser> dispenserList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    List<History> historyList = new ArrayList<>();
 
+
+    /**
+     * 사용자에게 Dispenser를 등록하고 양방향 연관관계 설정합니다.
+     */
+    public void addDispenser(Dispenser dispenser) {
+        dispenserList.add(dispenser);
+        dispenser.assignUser(this);
+    }
+
+    /**
+     * 사용자에게 History를 추가하고 양방향 연관관계 설정합니다.
+     */
+    public void addHistory(History history) {
+        historyList.add(history);
+        history.assignUser(this);
+    }
 }

@@ -20,6 +20,7 @@ import static jakarta.persistence.FetchType.LAZY;
 public class History {
 
     @Id @GeneratedValue
+    @Column(name = "history_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -40,4 +41,12 @@ public class History {
     private LocalDateTime requestedAt;
     private LocalDateTime completedAt;
     private String errorMessage;
+
+    /**
+     * 연관관계 편의 메소드
+     * - User.addHistory() 에서만 호출되어야 합니다.
+     */
+    public void assignUser(User user) {
+        this.user = user;
+    }
 }

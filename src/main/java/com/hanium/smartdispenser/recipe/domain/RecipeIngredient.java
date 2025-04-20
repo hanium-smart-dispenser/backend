@@ -6,9 +6,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -20,8 +17,7 @@ public class RecipeIngredient {
     @Id @GeneratedValue
     @Column(name = "recipe_ingredient_id")
     private Long id;
-    private int remaining;
-    private int capacity;
+    private int amount;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "recipe_id")
@@ -30,5 +26,13 @@ public class RecipeIngredient {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
+
+    public static RecipeIngredient of(Recipe recipe, Ingredient ingredient, int amount) {
+        RecipeIngredient ri = new RecipeIngredient();
+        ri.recipe = recipe;
+        ri.ingredient = ingredient;
+        ri.amount = amount;
+        return ri;
+    }
 
 }

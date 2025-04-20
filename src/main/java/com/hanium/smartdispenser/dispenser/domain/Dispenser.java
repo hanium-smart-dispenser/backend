@@ -7,6 +7,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -26,5 +29,24 @@ public class Dispenser extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private User user;
+
+    @OneToMany(mappedBy = "dispenser")
+    private List<DispenserSource> dispenserSourceList = new ArrayList<>();
+
+    /**
+     * 연관관계 편의 메소드
+     * - User.addDispenser() 에서만 호출되어야 합니다.
+     */
+    public void assignUser(User user) {
+        this.user = user;
+    }
+
+    /**
+     * Dispenser에 DispenserSource를 등록하고 양방향 연관관계 설정합니다.
+     */
+    public void addSource(DispenserSource dispenserSource) {
+        dispenserSourceList.add(dispenserSource);
+        dispenserSource.assignDispenser(this);
+    }
 
 }
