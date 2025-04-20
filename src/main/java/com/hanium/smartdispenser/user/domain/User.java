@@ -23,6 +23,8 @@ public class User extends BaseEntity {
     private Long id;
     private String name;
     private String password;
+
+    @Column(unique = true)
     private String email;
 
     @OneToMany(mappedBy = "user")
@@ -30,6 +32,17 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     List<History> historyList = new ArrayList<>();
+
+
+    public static User of(String name, String password, String email) {
+        User user = new User();
+        user.name = name;
+        //나중에 encoding 로직 추가 해야함.
+        //User 도메인 안에서 encoding 로직 추가 할 예정
+        user.password = password;
+        user.email = email;
+        return user;
+    }
 
 
     /**
