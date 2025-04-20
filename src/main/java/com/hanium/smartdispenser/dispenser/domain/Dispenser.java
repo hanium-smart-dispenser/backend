@@ -28,6 +28,7 @@ public class Dispenser extends BaseEntity {
     private DispenserStatus status;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "dispenser")

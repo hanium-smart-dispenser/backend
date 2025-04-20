@@ -24,12 +24,15 @@ public class History {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "dispenser_id")
     private Dispenser dispenser;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     @CreatedDate

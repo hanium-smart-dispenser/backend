@@ -29,6 +29,7 @@ public class Recipe {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
     private User createdBy;
 
     @OneToMany(mappedBy = "recipe")
