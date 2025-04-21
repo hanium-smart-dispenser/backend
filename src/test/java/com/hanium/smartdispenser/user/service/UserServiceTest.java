@@ -4,13 +4,16 @@ package com.hanium.smartdispenser.user.service;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.dto.UserCreateDto;
 import com.hanium.smartdispenser.user.exception.DuplicateEmailException;
+import com.hanium.smartdispenser.user.exception.UserNotFoundException;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -23,14 +26,16 @@ class UserServiceTest {
     @Test
     @DisplayName("User 생성 시 중복된 Email이면 예외를 반환한다.")
     void createUser_throwException_whenEmailIsDuplicated() {
-        UserCreateDto user1 = new UserCreateDto("회원1","aaa@gmail.com","123123");
-        UserCreateDto user2 = new UserCreateDto("회원2","aaa@gmail.com","123123");
+        String email = "aaa@gmail.com";
+        UserCreateDto user1 = new UserCreateDto("회원1", email,"123123");
+        UserCreateDto user2 = new UserCreateDto("회원2", email,"123123");
         userService.createUser(user1);
 
         em.flush();
 
-        Assertions.assertThatThrownBy(() ->
-                userService.createUser(user2)).isInstanceOf(DuplicateEmailException.class);
+        assertThatThrownBy(() ->
+                userService.createUser(user2)).isInstanceOf(DuplicateEmailException.class)
+                .hasMessage(String.format(DuplicateEmailException.DEFAULT_MESSAGE, email));
     }
 
     @Test
@@ -42,8 +47,18 @@ class UserServiceTest {
 
         User findUser = userService.findByEmail(email);
 
-        Assertions.assertThat(findUser.getName()).isEqualTo(dto.getName());
-        Assertions.assertThat(findUser.getEmail()).isEqualTo(dto.getEmail());
+        assertThat(findUser.getName()).isEqualTo(dto.getName());
+        assertThat(findUser.getEmail()).isEqualTo(dto.getEmail());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 User 조회 시 예외를 반환한다.")
+    void findByEmail_throwException_whenUserDoesNotExist() {
+        String email = "aaa@gmail.com";
+        assertThatThrownBy(() -> userService.findByEmail(email))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage(String.format(UserNotFoundException.DEFAULT_MESSAGE, email));
+
     }
 
 
