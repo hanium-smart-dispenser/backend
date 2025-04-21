@@ -71,4 +71,16 @@ class UserRepositoryTest {
         assertThat(userRepository.existsByEmail(user.getEmail())).isFalse();
     }
 
+    @Test
+    @DisplayName("User를 Email로 조회 할 수 있다..")
+    void findByEmail_returnUser_whenEmailExist() {
+        String email = "aaa@gmail.com";
+        User user = User.of("회원1", "123123", email);
+        userRepository.save(user);
+        Optional<User> findUser = userRepository.findByEmail(email);
+
+        assertThat(findUser).isPresent();
+        assertThat(findUser.get()).isEqualTo(user);
+    }
+
 }
