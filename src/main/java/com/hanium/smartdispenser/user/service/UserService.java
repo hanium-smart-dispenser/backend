@@ -44,5 +44,8 @@ public class UserService {
         return user.orElseThrow(() -> new UserNotFoundException(email));
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
+    }
 
 }

@@ -12,4 +12,12 @@ public class UserNotFoundException extends BusinessException {
     public UserNotFoundException(Throwable cause, String email) {
         super(String.format(DEFAULT_MESSAGE, email), cause, ERROR_CODE);
     }
+
+    public UserNotFoundException(Long id) {
+        super(String.format(DEFAULT_MESSAGE, id), ERROR_CODE);
+    }
+
+    public UserNotFoundException(Throwable cause, Long id) {
+        super(String.format(DEFAULT_MESSAGE, id), cause, ERROR_CODE);
+    }
 }
