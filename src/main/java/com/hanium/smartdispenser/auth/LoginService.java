@@ -1,0 +1,36 @@
+package com.hanium.smartdispenser.auth;
+
+import com.hanium.smartdispenser.auth.dto.LoginRequestDto;
+import com.hanium.smartdispenser.auth.dto.TokenResponse;
+import com.hanium.smartdispenser.auth.exception.InvalidLoginException;
+import com.hanium.smartdispenser.user.domain.User;
+import com.hanium.smartdispenser.user.exception.UserNotFoundException;
+import com.hanium.smartdispenser.user.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class LoginService {
+
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public TokenResponse login(LoginRequestDto loginRequestDto) {
+        try {
+            User user = userService.findByEmail(loginRequestDto.getEmail());
+
+            if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+                throw new InvalidLoginException();
+            }
+
+            String token = jwtTokenProvider.createToken(user.getId(), user.getRole());
+            return new TokenResponse(token);
+        } catch (UserNotFoundException e) {
+            throw new InvalidLoginException(e);
+        }
+    }
+
+}

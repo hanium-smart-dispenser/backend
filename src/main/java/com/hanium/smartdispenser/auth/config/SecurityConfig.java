@@ -1,5 +1,8 @@
-package com.hanium.smartdispenser.common.security;
+package com.hanium.smartdispenser.auth.config;
 
+import com.hanium.smartdispenser.auth.exception.SecurityExceptionHandler;
+import com.hanium.smartdispenser.auth.JwtFilter;
+import com.hanium.smartdispenser.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,7 @@ public class SecurityConfig {
 
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final SecurityExceptionHandler securityExceptionHandler;
     /**
      * JWT + REST API 로 로그인 인증
      * 프론트 연동 안될 시 CORS 옵션 건드려야 함
@@ -29,6 +33,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //Authentication 과 Authorization 예외 처리
+                .exceptionHandling(e -> e.authenticationEntryPoint(securityExceptionHandler)
+                        .accessDeniedHandler(securityExceptionHandler))
                 // 여기서 logout 은 session 제거 + SecurityContextHolder.clearContext
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
@@ -37,6 +44,7 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
     }
 

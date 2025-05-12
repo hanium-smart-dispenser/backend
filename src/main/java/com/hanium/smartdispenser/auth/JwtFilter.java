@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.common.security;
+package com.hanium.smartdispenser.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

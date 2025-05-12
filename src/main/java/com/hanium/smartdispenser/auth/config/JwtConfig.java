@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.common.security;
+package com.hanium.smartdispenser.auth.config;
 
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

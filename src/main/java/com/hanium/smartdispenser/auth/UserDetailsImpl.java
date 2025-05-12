@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.common.security;
+package com.hanium.smartdispenser.auth;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

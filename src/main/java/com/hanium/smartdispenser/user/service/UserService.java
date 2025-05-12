@@ -8,6 +8,7 @@ import com.hanium.smartdispenser.user.exception.UserNotFoundException;
 import com.hanium.smartdispenser.user.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponseDto createUser(UserCreateDto dto) {
-        User user = User.of(dto.getName(), dto.getPassword(), dto.getEmail());
+
+        User user = User.of(dto.getName(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEmailException(user.getEmail());

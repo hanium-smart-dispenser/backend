@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.common.security;
+package com.hanium.smartdispenser.auth;
 
 import com.hanium.smartdispenser.user.domain.Role;
 import io.jsonwebtoken.Claims;

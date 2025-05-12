@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.common.security;
+package com.hanium.smartdispenser.auth;
 
 public class JwtConstants {
     public static final String AUTH_HEADER = "Authorization";
