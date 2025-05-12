@@ -15,3 +15,9 @@ spring:
 logging:
   level:
     org.hibernate.SQL: trace
+
+jwt:
+  key: vDqsCFztXhjOSXE7GIM9OT1Y3txJWO1J
+  token :
+    expiration:
+      access : 1800000    # 30분
