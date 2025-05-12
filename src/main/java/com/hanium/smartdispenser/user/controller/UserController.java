@@ -12,9 +12,5 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    @PostMapping
-    public UserResponseDto createUser(@RequestBody UserCreateDto dto) {
-        return userService.createUser(dto);
-    }
 
 }
