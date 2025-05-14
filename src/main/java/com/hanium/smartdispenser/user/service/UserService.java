@@ -23,7 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponseDto createUser(UserCreateDto dto) {
+    public User createUser(UserCreateDto dto) {
 
         User user = User.of(dto.getName(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
 
@@ -36,7 +36,7 @@ public class UserService {
         // 이 코드 넣어야되나 고민 해봐야 됨.
 
         try {
-            return UserResponseDto.of(userRepository.save(user));
+            return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEmailException(e, user.getEmail());
         }

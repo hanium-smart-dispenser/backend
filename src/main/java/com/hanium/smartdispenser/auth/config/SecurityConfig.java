@@ -19,8 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
-
     private final JwtTokenProvider jwtTokenProvider;
     private final SecurityExceptionHandler securityExceptionHandler;
     /**
@@ -38,10 +36,12 @@ public class SecurityConfig {
                         .accessDeniedHandler(securityExceptionHandler))
                 // 여기서 logout 은 session 제거 + SecurityContextHolder.clearContext
                 .logout(AbstractHttpConfigurer::disable)
+                //경로 재설정 해야됨
                 .authorizeHttpRequests(
                         (authorize) -> authorize.requestMatchers(
-                                        "api/login", "api/signup", "api/logout").permitAll()
-                                .anyRequest().authenticated()
+                                        "api/login", "api/signup", "api/logout", "api/test")
+                                .permitAll()
+                                .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 

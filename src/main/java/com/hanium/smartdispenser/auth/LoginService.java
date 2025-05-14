@@ -1,7 +1,8 @@
 package com.hanium.smartdispenser.auth;
 
 import com.hanium.smartdispenser.auth.dto.LoginRequestDto;
-import com.hanium.smartdispenser.auth.dto.TokenResponse;
+import com.hanium.smartdispenser.auth.dto.LoginResponseDto;
+import com.hanium.smartdispenser.auth.dto.SignUpRequestDto;
 import com.hanium.smartdispenser.auth.exception.InvalidLoginException;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.exception.UserNotFoundException;
@@ -18,7 +19,7 @@ public class LoginService {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public TokenResponse login(LoginRequestDto loginRequestDto) {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         try {
             User user = userService.findByEmail(loginRequestDto.getEmail());
 
@@ -27,10 +28,13 @@ public class LoginService {
             }
 
             String token = jwtTokenProvider.createToken(user.getId(), user.getRole());
-            return new TokenResponse(token);
+            return new LoginResponseDto(token, user);
         } catch (UserNotFoundException e) {
             throw new InvalidLoginException(e);
         }
     }
 
+    public User singUp(SignUpRequestDto signUpRequestDto) {
+        return userService.createUser(signUpRequestDto.toUserCreateDto());
+    }
 }
