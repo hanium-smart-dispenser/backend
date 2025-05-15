@@ -50,4 +50,12 @@ public class Dispenser extends BaseEntity {
         dispenserSource.assignDispenser(this);
     }
 
+    public static Dispenser of(String name, DispenserStatus status, User user) {
+        Dispenser dispenser = new Dispenser();
+        dispenser.name = name;
+        dispenser.status = status;
+        dispenser.user = user;
+
+        return dispenser;
+    }
 }

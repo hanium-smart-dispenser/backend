@@ -1,5 +1,5 @@
 package com.hanium.smartdispenser.history.domain;
 
-enum HistoryStatus {
+public enum HistoryStatus {
     REQUESTED, PROCESSING, SUCCESS, FAIL
 }
