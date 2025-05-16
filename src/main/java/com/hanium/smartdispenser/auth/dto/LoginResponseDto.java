@@ -8,8 +8,8 @@ public class LoginResponseDto {
 
     private final String accessToken;
     private final long id;
-    private final String email;
     private final String name;
+    private final String email;
     private final String role;
 
     public LoginResponseDto(String accessToken, User user) {

@@ -10,32 +10,32 @@ import lombok.Getter;
 @Getter
 public class SignUpRequestDto {
 
-    @NotBlank
-    @Email
-    private final String email;
-
-    @NotBlank
-    private final String password;
 
     @NotBlank
     private final String name;
 
     @NotBlank
+    private final String password;
+
+    @NotBlank
+    @Email
+    private final String email;
+
+    @NotBlank
     private final String passwordConfirm;
 
     @JsonCreator
-    public SignUpRequestDto(@JsonProperty("email") String email,
+    public SignUpRequestDto(@JsonProperty("name") String name,
                             @JsonProperty("password") String password,
-                            @JsonProperty("name") String name,
+                            @JsonProperty("email") String email,
                             @JsonProperty("passwordConfirm") String passwordConfirm) {
-        this.email = email;
-        this.password = password;
         this.name = name;
+        this.password = password;
+        this.email = email;
         this.passwordConfirm = passwordConfirm;
     }
 
     public UserCreateDto toUserCreateDto() {
-        return new UserCreateDto(getName(), getEmail(), getPassword());
+        return new UserCreateDto(getName(), getPassword(), getEmail());
     }
-
 }

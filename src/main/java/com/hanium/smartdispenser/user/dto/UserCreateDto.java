@@ -13,11 +13,11 @@ public class UserCreateDto {
 
     @JsonCreator
     public UserCreateDto(@JsonProperty("name") String name,
-                         @JsonProperty("email") String email,
-                         @JsonProperty("password") String password) {
+                         @JsonProperty("password") String password,
+                         @JsonProperty("email") String email) {
         this.name = name;
-        this.email = email;
         this.password = password;
+        this.email = email;
     }
 
 

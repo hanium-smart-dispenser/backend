@@ -27,8 +27,8 @@ class UserServiceTest {
     @DisplayName("User 생성 시 중복된 Email이면 예외를 반환한다.")
     void createUser_throwException_whenEmailIsDuplicated() {
         String email = "aaa@gmail.com";
-        UserCreateDto user1 = new UserCreateDto("회원1", email,"123123");
-        UserCreateDto user2 = new UserCreateDto("회원2", email,"123123");
+        UserCreateDto user1 = new UserCreateDto("회원1", "123123", email);
+        UserCreateDto user2 = new UserCreateDto("회원2", "123123", email);
         userService.createUser(user1);
 
         em.flush();
@@ -42,7 +42,7 @@ class UserServiceTest {
     @DisplayName("User를 생성하고 Email로 조회 할 수 있다.")
     void findByEmail_returnUser_whenUserExist() {
         String email = "aaa@gmail.com";
-        UserCreateDto dto = new UserCreateDto("회원1", email,"123123");
+        UserCreateDto dto = new UserCreateDto("회원1", "123123", email);
         userService.createUser(dto);
 
         User findUser = userService.findByEmail(email);
