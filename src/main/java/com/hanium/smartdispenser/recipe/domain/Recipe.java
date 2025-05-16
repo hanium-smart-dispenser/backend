@@ -43,4 +43,11 @@ public class Recipe {
         recipeIngredientList.add(ri);
     }
 
+    public static Recipe of(String name, User user) {
+        Recipe recipe = new Recipe();
+        recipe.name = name;
+        recipe.createdBy = user;
+        return recipe;
+    }
+
 }
