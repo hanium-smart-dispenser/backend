@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.dispenser;
+package com.hanium.smartdispenser.dispenser.exception;
 
 import com.hanium.smartdispenser.common.exception.InfrastructureException;
 

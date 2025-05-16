@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.dispenser;
+package com.hanium.smartdispenser.dispenser.dto;
 
 import lombok.Getter;
 

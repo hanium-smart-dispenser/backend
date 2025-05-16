@@ -1,5 +1,6 @@
-package com.hanium.smartdispenser.dispenser;
+package com.hanium.smartdispenser.dispenser.service;
 
+import com.hanium.smartdispenser.dispenser.exception.DispenserCommandSendFailedException;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;

@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.dispenser;
+package com.hanium.smartdispenser.dispenser.config;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
