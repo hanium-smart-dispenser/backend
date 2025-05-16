@@ -13,10 +13,10 @@ public class DispenserCommandResult {
     private final LocalDateTime requestedAt;
     private final LocalDateTime completedAt;
 
-    public DispenserCommandResult(String commandId, HistoryStatus status, LocalDateTime requestedAt) {
+    public DispenserCommandResult(String commandId, HistoryStatus status, LocalDateTime requestedAt, LocalDateTime completedAt) {
         this.commandId = commandId;
         this.status = status;
         this.requestedAt = requestedAt;
-        this.completedAt = LocalDateTime.now();
+        this.completedAt =completedAt;
     }
 }

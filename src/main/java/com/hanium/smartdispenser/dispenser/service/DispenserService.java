@@ -41,7 +41,7 @@ public class DispenserService {
         //dto 내용 parsing -> recipe
         mqttService.sendCommand(dispenserId, "aa");
         //history 추가
-        return new DispenserCommandResult(commandId, HistoryStatus.SUCCESS, null);
+        return new DispenserCommandResult(commandId, HistoryStatus.SUCCESS, now, LocalDateTime.now());
     }
     public Dispenser findById(Long id) {
         return dispenserRepository.findById(id).orElseThrow(DispenserNotFoundException::new);
