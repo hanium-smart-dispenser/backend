@@ -11,12 +11,14 @@ import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DispenserService {
 
     private final DispenserRepository dispenserRepository;
@@ -39,7 +41,7 @@ public class DispenserService {
         //dto 내용 parsing -> recipe
         mqttService.sendCommand(dispenserId, "aa");
         //history 추가
-        return new DispenserCommandResult(commandId, HistoryStatus.SUCCESS, requestDto.getRequestedAt());
+        return new DispenserCommandResult(commandId, HistoryStatus.SUCCESS, null);
     }
     public Dispenser findById(Long id) {
         return dispenserRepository.findById(id).orElseThrow(DispenserNotFoundException::new);
