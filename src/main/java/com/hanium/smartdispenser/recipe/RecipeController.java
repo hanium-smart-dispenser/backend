@@ -4,12 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.nio.file.attribute.UserPrincipal;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +19,9 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<Void> createRecipe(
-            @AuthenticationPrincipal UserPrincipal user,
+            @AuthenticationPrincipal UserDetails user,
             @RequestBody @Valid RecipeCreateRequestDto requestDto) {
-        recipeService.createRecipe(Long.valueOf(user.getName()), requestDto.getName(),
+        recipeService.createRecipe(Long.valueOf(user.getUsername()), requestDto.getName(),
                 requestDto.getIngredients());
         return ResponseEntity.ok().build();
     }

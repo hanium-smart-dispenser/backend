@@ -39,8 +39,8 @@ public class SecurityConfig {
                 //경로 재설정 해야됨
                 .authorizeHttpRequests(
                         (authorize) -> authorize.requestMatchers(
-                                        "api/login", "api/signup", "api/logout", "api/test")
-                                .permitAll()
+                                        "api/recipes")
+                                .authenticated()
                                 .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
