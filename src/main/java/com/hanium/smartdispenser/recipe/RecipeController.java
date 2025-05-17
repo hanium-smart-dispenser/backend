@@ -1,5 +1,6 @@
 package com.hanium.smartdispenser.recipe;
 
+import com.hanium.smartdispenser.recipe.dto.RecipeCreateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

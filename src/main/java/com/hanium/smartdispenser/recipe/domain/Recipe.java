@@ -1,5 +1,6 @@
 package com.hanium.smartdispenser.recipe.domain;
 
+import com.hanium.smartdispenser.common.domain.BaseEntity;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.user.domain.User;
 import jakarta.persistence.*;
@@ -18,21 +19,18 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "recipe")
-public class Recipe {
+public class Recipe extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "recipe_id")
     private Long id;
     private String name;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User createdBy;
 
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeIngredient> recipeIngredientList = new ArrayList<>();
 
     /**

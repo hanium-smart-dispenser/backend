@@ -3,7 +3,7 @@ package com.hanium.smartdispenser.recipe;
 import com.hanium.smartdispenser.ingredient.IngredientService;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.recipe.domain.Recipe;
-import com.hanium.smartdispenser.recipe.domain.RecipeIngredient;
+import com.hanium.smartdispenser.recipe.dto.IngredientWithAmountDto;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ public class RecipeService {
     private final UserService userService;
     private final IngredientService ingredientService;
 
+    @Transactional
     public void createRecipe(Long userId, String recipeName, List<IngredientWithAmountDto> recipeIngredients) {
         User user = userService.findById(userId);
         Recipe recipe = Recipe.of(recipeName, user);

@@ -5,6 +5,7 @@ import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.ingredient.IngredientRepository;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
+import com.hanium.smartdispenser.ingredient.domain.IngredientType;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class DbInitializer implements ApplicationRunner {
         dispenserRepository.save(Dispenser.of("testDispenser1", DispenserStatus.BUSY, testUser1));
         dispenserRepository.save(Dispenser.of("testDispenser2", DispenserStatus.BUSY, testUser2));
 
-        ingredientRepository.save(Ingredient.of("고춧가루"));
-        ingredientRepository.save(Ingredient.of("설탕"));
+        ingredientRepository.save(Ingredient.of("고춧가루", IngredientType.POWDER));
+        ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));
     }
 }

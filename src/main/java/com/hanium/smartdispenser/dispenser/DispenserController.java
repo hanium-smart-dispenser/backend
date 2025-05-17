@@ -6,6 +6,7 @@ import com.hanium.smartdispenser.dispenser.service.DispenserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.attribute.UserPrincipal;
@@ -20,11 +21,10 @@ public class DispenserController {
     @PostMapping("/{dispenserId}/command")
     public ResponseEntity<DispenserCommandResponseDto> sendCommand(
             @PathVariable Long dispenserId,
-            @AuthenticationPrincipal UserPrincipal user,
+            @AuthenticationPrincipal UserDetails user,
             @RequestBody DispenserCommandRequestDto requestDto) {
-        dispenserService.sendCommand(dispenserId, Long.valueOf(user.getName()), requestDto);
-        //return 메세지 추가해야댐
-        return ResponseEntity.ok().build();
+        DispenserCommandResponseDto responseDto = dispenserService.sendCommand(
+                dispenserId, Long.valueOf(user.getUsername()), requestDto.getRecipeId());
+        return ResponseEntity.ok(responseDto);
     }
-
 }
