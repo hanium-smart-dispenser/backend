@@ -8,8 +8,10 @@ import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.exception.UserNotFoundException;
 import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor

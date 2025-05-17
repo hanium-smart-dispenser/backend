@@ -9,6 +9,8 @@ import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.exception.DispenserCommandSendFailedException;
 import com.hanium.smartdispenser.dispenser.exception.DispenserNotFoundException;
 import com.hanium.smartdispenser.dispenser.exception.UnauthorizedDispenserAccessException;
+import com.hanium.smartdispenser.history.HistoryService;
+import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.domain.HistoryStatus;
 import com.hanium.smartdispenser.recipe.RecipeService;
 import com.hanium.smartdispenser.recipe.domain.Recipe;
@@ -32,10 +34,12 @@ public class DispenserService {
     private final MqttService mqttService;
     private final UserService userService;
     private final RecipeService recipeService;
+    private final HistoryService historyService;
     private final ObjectMapper objectMapper;
 
 
     // 다른 Service에서 던진 예외 감싸기 추가해야댐.
+    @Transactional
     public DispenserCommandResponseDto sendCommand(Long dispenserId, Long userId, Long recipeId) {
         LocalDateTime start = LocalDateTime.now();
         User user = userService.findById(userId);
@@ -53,14 +57,22 @@ public class DispenserService {
         }
 
         String commandId = UUID.randomUUID().toString();
-        DispenserCommandPayLoadDto payLoadDto = new DispenserCommandPayLoadDto(commandId, userId, recipeId, ingredients, LocalDateTime.now());
 
-        //dto 내용 parsing -> recipe
-        mqttService.sendCommand(dispenserId, dtoToJson(payLoadDto));
-        //history 추가
-        return new DispenserCommandResponseDto(commandId, dispenserId, userId, recipeId, HistoryStatus.SUCCESS, start, LocalDateTime.now());
+        History history = History.of(user, dispenser, recipe, LocalDateTime.now());
+        historyService.createHistory(history);
+
+        try {
+            DispenserCommandPayLoadDto payLoadDto = new DispenserCommandPayLoadDto(commandId, userId, recipeId, ingredients, LocalDateTime.now());
+            mqttService.sendCommand(dispenserId, dtoToJson(payLoadDto));
+            history.updateStatus(HistoryStatus.PROCESSING);
+        } catch (DispenserCommandSendFailedException e) {
+            history.updateStatus(HistoryStatus.FAIL);
+            throw e;
+        }
+
+        history.markSuccess();
+        return new DispenserCommandResponseDto(commandId, dispenserId, userId, recipeId, history.getStatus(), start, LocalDateTime.now());
     }
-
     private String dtoToJson(DispenserCommandPayLoadDto payLoadDto) {
         try {
             return objectMapper.writeValueAsString(payLoadDto);

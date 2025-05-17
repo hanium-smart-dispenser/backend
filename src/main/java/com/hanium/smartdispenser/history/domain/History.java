@@ -35,15 +35,11 @@ public class History {
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
     @Enumerated(EnumType.STRING)
     private HistoryStatus status;
 
     private LocalDateTime requestedAt;
     private LocalDateTime completedAt;
-    private String errorMessage;
 
     /**
      * 연관관계 편의 메소드
@@ -51,5 +47,25 @@ public class History {
      */
     public void assignUser(User user) {
         this.user = user;
+    }
+
+    public static History of(User user, Dispenser dispenser, Recipe recipe, LocalDateTime requestedAt) {
+        History history = new History();
+        history.user = user;
+        history.dispenser = dispenser;
+        history.recipe = recipe;
+        history.status = HistoryStatus.REQUESTED;
+        history.requestedAt = requestedAt;
+
+        return history;
+    }
+
+    public void updateStatus(HistoryStatus status) {
+        this.status = status;
+    }
+
+    public void markSuccess() {
+        this.status = HistoryStatus.SUCCESS;
+        this.completedAt = LocalDateTime.now();
     }
 }

@@ -12,8 +12,9 @@ public class HistoryService {
 
     private final HistoryRepository historyRepository;
 
-//    public History createHistory() {
-//
-//    }
+    @Transactional
+    public void createHistory(History history) {
+        historyRepository.save(history);
+    }
 
 }
