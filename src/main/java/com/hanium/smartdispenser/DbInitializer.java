@@ -39,8 +39,8 @@ public class DbInitializer implements ApplicationRunner {
         userRepository.save(testUser1);
         userRepository.save(testUser2);
 
-        dispenserRepository.save(Dispenser.of("testDispenser1", DispenserStatus.BUSY, testUser1));
-        dispenserRepository.save(Dispenser.of("testDispenser2", DispenserStatus.BUSY, testUser2));
+        dispenserRepository.save(Dispenser.of("testDispenser1", DispenserStatus.READY, testUser1));
+        dispenserRepository.save(Dispenser.of("testDispenser2", DispenserStatus.READY, testUser2));
 
         ingredientRepository.save(Ingredient.of("고춧가루", IngredientType.POWDER));
         ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));
@@ -54,7 +54,7 @@ public class DbInitializer implements ApplicationRunner {
         ingredients2.add(new IngredientWithAmountDto(2L, 2, IngredientType.LIQUID));
 
         recipeService.createRecipe(testUser1.getId(), "testRecipe1", ingredients1);
-        recipeService.createRecipe(testUser2.getId(), "testRecipe2", ingredients1);
+        recipeService.createRecipe(testUser2.getId(), "testRecipe2", ingredients2);
 
 
         dispenserService.sendCommand(1L, 1L, 1L);

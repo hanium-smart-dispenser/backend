@@ -2,6 +2,7 @@ package com.hanium.smartdispenser.dispenser.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandPayLoadDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandResponseDto;
 import com.hanium.smartdispenser.dispenser.DispenserRepository;
@@ -51,6 +52,10 @@ public class DispenserService {
                 .map(ri -> new IngredientWithAmountDto(ri.getIngredient().getId(), ri.getAmount(), ri.getIngredient().getType()))
                 .toList();
 
+        if (dispenser.getStatus() != DispenserStatus.READY) {
+            throw new DispenserCommandSendFailedException();
+        }
+
         //디스펜서 소유자 확인
         if (!dispenser.getUser().getId().equals(user.getId())) {
             throw new UnauthorizedDispenserAccessException(user.getId(), dispenserId);
@@ -63,6 +68,7 @@ public class DispenserService {
 
         try {
             DispenserCommandPayLoadDto payLoadDto = new DispenserCommandPayLoadDto(commandId, userId, recipeId, ingredients, LocalDateTime.now());
+            dispenser.updateStatus(DispenserStatus.BUSY);
             mqttService.sendCommand(dispenserId, dtoToJson(payLoadDto));
             history.updateStatus(HistoryStatus.PROCESSING);
         } catch (DispenserCommandSendFailedException e) {

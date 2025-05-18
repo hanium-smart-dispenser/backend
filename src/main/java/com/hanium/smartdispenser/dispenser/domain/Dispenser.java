@@ -58,4 +58,8 @@ public class Dispenser extends BaseEntity {
 
         return dispenser;
     }
+
+    public void updateStatus(DispenserStatus status) {
+        this.status = status;
+    }
 }
