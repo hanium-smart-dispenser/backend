@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandPayLoadDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandResponseDto;
-import com.hanium.smartdispenser.dispenser.DispenserRepository;
+import com.hanium.smartdispenser.dispenser.dto.DispenserDto;
+import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.exception.DispenserCommandSendFailedException;
 import com.hanium.smartdispenser.dispenser.exception.DispenserNotFoundException;
@@ -13,12 +14,15 @@ import com.hanium.smartdispenser.dispenser.exception.UnauthorizedDispenserAccess
 import com.hanium.smartdispenser.history.HistoryService;
 import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.domain.HistoryStatus;
+import com.hanium.smartdispenser.recipe.RecipeNotFoundException;
 import com.hanium.smartdispenser.recipe.RecipeService;
 import com.hanium.smartdispenser.recipe.domain.Recipe;
 import com.hanium.smartdispenser.recipe.dto.IngredientWithAmountDto;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,10 +61,7 @@ public class DispenserService {
         }
 
         //디스펜서 소유자 확인
-        if (!dispenser.getUser().getId().equals(user.getId())) {
-            throw new UnauthorizedDispenserAccessException(user.getId(), dispenserId);
-        }
-
+        validateUserAccess(userId, dispenserId);
         String commandId = UUID.randomUUID().toString();
 
         History history = History.of(user, dispenser, recipe, LocalDateTime.now());
@@ -87,7 +88,22 @@ public class DispenserService {
         }
     }
 
-    public Dispenser findById(Long id) {
-        return dispenserRepository.findById(id).orElseThrow(DispenserNotFoundException::new);
+    public Dispenser findById(Long dispenserId) {
+        return dispenserRepository.findById(dispenserId).orElseThrow(() -> new DispenserNotFoundException(dispenserId));
     }
+
+    public Page<DispenserDto> findAllByUserId(Long userId, Pageable pageable) {
+        Page<Dispenser> dispensers = dispenserRepository.findAllByUserIdWithPaging(userId, pageable);
+        return dispensers.map(DispenserDto::of);
+    }
+
+    public void validateUserAccess(Long userId, Long dispenserId) {
+        Dispenser dispenser = dispenserRepository.findById(dispenserId).orElseThrow(() -> new RecipeNotFoundException(dispenserId));
+        if (!dispenser.getUser().getId().equals(userId)) {
+            throw new UnauthorizedDispenserAccessException(userId, dispenserId);
+        }
+    }
+
+
+
 }

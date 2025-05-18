@@ -1,6 +1,6 @@
 package com.hanium.smartdispenser;
 
-import com.hanium.smartdispenser.dispenser.DispenserRepository;
+import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.dispenser.service.DispenserService;
@@ -35,12 +35,18 @@ public class DbInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         User testUser1 = User.of("testUser1", passwordEncoder.encode("1234"), "aaa@aaa.com");
         User testUser2 = User.of("testUser2", passwordEncoder.encode("1234"), "bbb@bbb.com");
+        User testUser3 = User.of("testUser3", passwordEncoder.encode("1234"), "ccc@ccc.com");
 
         userRepository.save(testUser1);
         userRepository.save(testUser2);
+        userRepository.save(testUser3);
 
         dispenserRepository.save(Dispenser.of("testDispenser1", DispenserStatus.READY, testUser1));
         dispenserRepository.save(Dispenser.of("testDispenser2", DispenserStatus.READY, testUser2));
+
+        for (int i = 0; i < 100; i++) {
+            dispenserRepository.save(Dispenser.of("testDispenser" + (i + 3), DispenserStatus.READY, testUser3));
+        }
 
         ingredientRepository.save(Ingredient.of("고춧가루", IngredientType.POWDER));
         ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));

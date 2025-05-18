@@ -13,9 +13,9 @@ import java.util.List;
  */
 
 @AllArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
-    private final String userId;
+    private final Long userId;
     private final String role;
 
     @Override
@@ -32,5 +32,11 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return String.valueOf(userId);
     }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+
 
 }

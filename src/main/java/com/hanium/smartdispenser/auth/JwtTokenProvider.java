@@ -52,8 +52,8 @@ public class JwtTokenProvider {
         Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
         String userId = claims.getSubject();
         String role = claims.get("role", String.class);
-        UserDetailsImpl userDetails = new UserDetailsImpl(userId, role);
+        UserPrincipal user = new UserPrincipal(Long.valueOf(userId), role);
 
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }

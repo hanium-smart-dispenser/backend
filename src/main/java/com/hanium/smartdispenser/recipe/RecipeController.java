@@ -1,11 +1,11 @@
 package com.hanium.smartdispenser.recipe;
 
+import com.hanium.smartdispenser.auth.UserPrincipal;
 import com.hanium.smartdispenser.recipe.dto.RecipeCreateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +20,9 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<Void> createRecipe(
-            @AuthenticationPrincipal UserDetails user,
+            @AuthenticationPrincipal UserPrincipal user,
             @RequestBody @Valid RecipeCreateRequestDto requestDto) {
-        recipeService.createRecipe(Long.valueOf(user.getUsername()), requestDto.getName(),
+        recipeService.createRecipe(user.getUserId(), requestDto.getName(),
                 requestDto.getIngredients());
         return ResponseEntity.ok().build();
     }
