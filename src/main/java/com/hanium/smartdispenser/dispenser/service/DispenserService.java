@@ -33,6 +33,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+//REFACTORING 필요 ) FACADE 패턴?
 public class DispenserService {
 
     private final DispenserRepository dispenserRepository;
