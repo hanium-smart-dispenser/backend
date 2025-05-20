@@ -57,7 +57,7 @@ public class DispenserService {
                 .map(ri -> new IngredientWithAmountDto(ri.getIngredient().getId(), ri.getAmount(), ri.getIngredient().getType()))
                 .toList();
 
-        if (dispenser.getStatus() != DispenserStatus.READY) {
+        if (dispenser.getStatus() != DispenserStatus.CONNECTED) {
             throw new DispenserCommandSendFailedException();
         }
 
@@ -103,6 +103,11 @@ public class DispenserService {
         if (!dispenser.getUser().getId().equals(userId)) {
             throw new UnauthorizedDispenserAccessException(userId, dispenserId);
         }
+    }
+
+    public void createDispenser(String name, Long userId) {
+        User user = userService.findById(userId);
+        dispenserRepository.save(Dispenser.of(name, DispenserStatus.CONNECTED, user));
     }
 
 

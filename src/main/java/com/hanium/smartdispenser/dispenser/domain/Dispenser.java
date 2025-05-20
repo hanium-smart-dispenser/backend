@@ -28,7 +28,8 @@ public class Dispenser extends BaseEntity {
     private DispenserStatus status;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true)
+    // 매핑은 1:n 이지만 비지니스 적으로 1대1 mapping 할거라 unique 제약 설정
     private User user;
 
     @OneToMany(mappedBy = "dispenser")
