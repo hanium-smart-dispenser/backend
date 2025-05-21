@@ -27,8 +27,14 @@
 
 ```shell
 src/main/java/com/hanium/smartdispenser
-├── user              # 사용자 도메인
-├── dispenser         # 디스펜서 관련 로직
-├── recipe            # 레시피 및 재료 조합
-├── history           # 요청 이력 저장
-├── common            # 예외, 설정, 유틸
+├── auth                
+├── common              
+├── dispenser           
+├── history             
+├── ingredient          
+├── recipe              
+└── user           
+```
+## 📡 주요 기능
+
+ 

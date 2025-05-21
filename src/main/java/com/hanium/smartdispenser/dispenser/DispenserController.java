@@ -1,10 +1,10 @@
 package com.hanium.smartdispenser.dispenser;
 
 import com.hanium.smartdispenser.auth.UserPrincipal;
-import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandRequestDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandResponseDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserDto;
+import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
 import com.hanium.smartdispenser.dispenser.service.DispenserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/dispensers")
 public class DispenserController {
 
+    private final DispenserCommandFacade dispenserCommandFacade;
     private final DispenserService dispenserService;
 
     @GetMapping
@@ -30,7 +31,7 @@ public class DispenserController {
             @PathVariable Long dispenserId,
             @AuthenticationPrincipal UserPrincipal user,
             @RequestBody DispenserCommandRequestDto requestDto) {
-        DispenserCommandResponseDto responseDto = dispenserService.sendCommand(
+        DispenserCommandResponseDto responseDto = dispenserCommandFacade.sendCommand(
                 dispenserId, user.getUserId(), requestDto.getRecipeId());
         return ResponseEntity.ok(responseDto);
     }

@@ -3,7 +3,7 @@ package com.hanium.smartdispenser;
 import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
-import com.hanium.smartdispenser.dispenser.service.DispenserService;
+import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
 import com.hanium.smartdispenser.ingredient.IngredientRepository;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.ingredient.domain.IngredientType;
@@ -28,8 +28,8 @@ public class DbInitializer implements ApplicationRunner {
     private final UserRepository userRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeService recipeService;
-    private final DispenserService dispenserService;
     private final PasswordEncoder passwordEncoder;
+    private final DispenserCommandFacade dispenserCommandFacade;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -59,7 +59,7 @@ public class DbInitializer implements ApplicationRunner {
         recipeService.createRecipe(testUser2.getId(), "testRecipe2", ingredients2);
 
 
-        dispenserService.sendCommand(1L, 1L, 1L);
+        dispenserCommandFacade.sendCommand(1L, 1L, 1L);
 
     }
 }

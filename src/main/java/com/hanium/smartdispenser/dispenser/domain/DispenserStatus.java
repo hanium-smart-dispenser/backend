@@ -1,5 +1,5 @@
 package com.hanium.smartdispenser.dispenser.domain;
 
 public enum DispenserStatus {
-    BUSY, DISCONNECTED, CONNECTED, ERROR
+    READY, BUSY, DISCONNECTED, CONNECTED, ERROR
 }
