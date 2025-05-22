@@ -35,8 +35,8 @@ public class DispenserService {
         }
     }
 
-    public void createDispenser(Dispenser dispenser) {
-        dispenserRepository.save(dispenser);
+    public Long createDispenser(Dispenser dispenser) {
+        return dispenserRepository.save(dispenser).getId();
     }
 
     public void validateDispenserStatus(Long dispenserId) {
