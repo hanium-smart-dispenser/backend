@@ -2,11 +2,11 @@ package com.hanium.smartdispenser.dispenser.service;
 
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.dispenser.dto.DispenserDto;
+import com.hanium.smartdispenser.dispenser.exception.DispenserNotReadyException;
 import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.exception.DispenserNotFoundException;
 import com.hanium.smartdispenser.dispenser.exception.UnauthorizedDispenserAccessException;
-import com.hanium.smartdispenser.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,14 +35,15 @@ public class DispenserService {
         }
     }
 
-    public void createDispenser(String name, User user) {
-        dispenserRepository.save(Dispenser.of(name, DispenserStatus.CONNECTED, user));
+    public void createDispenser(Dispenser dispenser) {
+        dispenserRepository.save(dispenser);
     }
 
-    public boolean canDispense(Long dispenserId) {
-        return findById(dispenserId).getStatus() == DispenserStatus.CONNECTED;
+    public void validateDispenserStatus(Long dispenserId) {
+        DispenserStatus status = findById(dispenserId).getStatus();
+        if (status != DispenserStatus.READY) {
+            throw new DispenserNotReadyException(status);
+        }
     }
-
-
 
 }

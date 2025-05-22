@@ -45,7 +45,7 @@ public class DispenserCommandFacade {
 
         List<IngredientWithAmountDto> ingredients = recipeParsingFacade.getIngredientsList(recipeId);
         dispenserService.validateUserAccess(userId, dispenserId);
-        dispenserService.canDispense(dispenserId);
+        dispenserService.validateDispenserStatus(dispenserId);
 
         String commandId = UUID.randomUUID().toString();
         History history = History.of(user, dispenser, recipe, LocalDateTime.now());
@@ -64,5 +64,11 @@ public class DispenserCommandFacade {
 
         history.markSuccess();
         return new DispenserCommandResponseDto(commandId, dispenserId, userId, recipeId, history.getStatus(), start, LocalDateTime.now());
+    }
+
+
+    public void createDispenser(String name, Long userId) {
+        User user = userService.findById(userId);
+        dispenserService.createDispenser(Dispenser.of(name, DispenserStatus.CONNECTED, user));
     }
 }
