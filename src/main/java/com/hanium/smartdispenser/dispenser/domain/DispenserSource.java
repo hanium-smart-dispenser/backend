@@ -19,6 +19,9 @@ public class DispenserSource {
     private Long id;
     private int slot;
 
+    @Column(name = "is_low")
+    private boolean isLow;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "dispenser_id")
     private Dispenser dispenser;

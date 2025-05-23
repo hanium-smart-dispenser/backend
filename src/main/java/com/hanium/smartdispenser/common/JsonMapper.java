@@ -19,4 +19,13 @@ public class JsonMapper<T> {
             throw new JsonParseException(e);
         }
     }
+
+    public T fromJson(String json, Class<T> type) {
+        try {
+            return objectMapper.readValue(json, type);
+        } catch (JsonProcessingException e) {
+            throw new JsonParseException(e);
+        }
+    }
+
 }

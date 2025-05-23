@@ -63,6 +63,7 @@ public class DispenserCommandFacade {
         }
 
         history.markSuccess();
+        dispenser.updateStatus(DispenserStatus.READY);
         return new DispenserCommandResponseDto(commandId, dispenserId, userId, recipeId, history.getStatus(), start, LocalDateTime.now());
     }
 

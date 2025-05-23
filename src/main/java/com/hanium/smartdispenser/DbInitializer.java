@@ -46,6 +46,10 @@ public class DbInitializer implements ApplicationRunner {
 
         ingredientRepository.save(Ingredient.of("고춧가루", IngredientType.POWDER));
         ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));
+        ingredientRepository.save(Ingredient.of("간장", IngredientType.LIQUID));
+        ingredientRepository.save(Ingredient.of("후추", IngredientType.POWDER));
+        ingredientRepository.save(Ingredient.of("다시다", IngredientType.POWDER));
+        ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));
 
         List<IngredientWithAmountDto> ingredients1 = new ArrayList<>();
         ingredients1.add(new IngredientWithAmountDto(1L, 1, IngredientType.POWDER));

@@ -24,9 +24,9 @@ public class DispenserSourceService {
 
 
     @Transactional
-    public void addSourceToDispenser(DispenserStatusDto requestDto) {
-        Dispenser dispenser = dispenserService.findById(requestDto.getDispenserId());
-        List<SourceListDto> sourceList = requestDto.getSources();
+    public void updateStatus(DispenserStatusDto statusDto) {
+        Dispenser dispenser = dispenserService.findById(statusDto.getDispenserId());
+        List<SourceListDto> sourceList = statusDto.getSources();
         for (SourceListDto sourceListDto : sourceList) {
             Ingredient ingredient = ingredientService.findById(sourceListDto.getIngredientId());
             DispenserSource source = DispenserSource.of(sourceListDto.getSlot(), ingredient);
