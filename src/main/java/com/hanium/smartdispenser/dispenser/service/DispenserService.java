@@ -1,15 +1,12 @@
 package com.hanium.smartdispenser.dispenser.service;
 
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
-import com.hanium.smartdispenser.dispenser.dto.DispenserDto;
 import com.hanium.smartdispenser.dispenser.exception.DispenserNotReadyException;
 import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.exception.DispenserNotFoundException;
 import com.hanium.smartdispenser.dispenser.exception.UnauthorizedDispenserAccessException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +20,10 @@ public class DispenserService {
         return dispenserRepository.findById(dispenserId).orElseThrow(() -> new DispenserNotFoundException(dispenserId));
     }
 
-    public Page<DispenserDto> findAllByUserId(Long userId, Pageable pageable) {
-        Page<Dispenser> dispensers = dispenserRepository.findAllByUserIdWithPaging(userId, pageable);
-        return dispensers.map(DispenserDto::of);
+    public Dispenser findByUser(Long userId) {
+        Dispenser dispenser = dispenserRepository.findByUser(userId);
+        validateUserAccess(userId, dispenser.getId());
+        return dispenser;
     }
 
     public void validateUserAccess(Long userId, Long dispenserId) {

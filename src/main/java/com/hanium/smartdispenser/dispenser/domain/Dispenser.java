@@ -22,26 +22,17 @@ public class Dispenser extends BaseEntity {
     @GeneratedValue
     @Column(name = "dispenser_id")
     private Long id;
-    private String name;
 
     @Enumerated(EnumType.STRING)
     private DispenserStatus status;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id", unique = true)
-    // 매핑은 1:n 이지만 비지니스 적으로 1대1 mapping 할거라 unique 제약 설정
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "dispenser")
+    @OneToMany(mappedBy = "dispenser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DispenserSource> dispenserSourceList = new ArrayList<>();
 
-    /**
-     * 연관관계 편의 메소드
-     * - User.addDispenser() 에서만 호출되어야 합니다.
-     */
-    public void assignUser(User user) {
-        this.user = user;
-    }
 
     /**
      * Dispenser에 DispenserSource를 등록하고 양방향 연관관계 설정합니다.
@@ -51,9 +42,8 @@ public class Dispenser extends BaseEntity {
         dispenserSource.assignDispenser(this);
     }
 
-    public static Dispenser of(String name, DispenserStatus status, User user) {
+    public static Dispenser of(DispenserStatus status, User user) {
         Dispenser dispenser = new Dispenser();
-        dispenser.name = name;
         dispenser.status = status;
         dispenser.user = user;
 

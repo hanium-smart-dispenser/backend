@@ -41,8 +41,8 @@ public class DbInitializer implements ApplicationRunner {
         userRepository.save(testUser2);
         userRepository.save(testUser3);
 
-        dispenserRepository.save(Dispenser.of("testDispenser1", DispenserStatus.READY, testUser1));
-        dispenserRepository.save(Dispenser.of("testDispenser2", DispenserStatus.READY, testUser2));
+        dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser1));
+        dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser2));
 
         ingredientRepository.save(Ingredient.of("고춧가루", IngredientType.POWDER));
         ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));

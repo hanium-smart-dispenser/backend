@@ -17,8 +17,7 @@ public class DispenserSource {
     @Id @GeneratedValue
     @Column(name = "dispenser_source_id")
     private Long id;
-    private int remaining;
-    private int capacity;
+    private int slot;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "dispenser_id")
@@ -35,6 +34,12 @@ public class DispenserSource {
      */
     public void assignDispenser(Dispenser dispenser) {
         this.dispenser = dispenser;
+    }
+
+    public static DispenserSource of(int slot, Ingredient ingredient) {
+        DispenserSource ds = new DispenserSource();
+        ds.slot = slot;
+        return ds;
     }
 
 }

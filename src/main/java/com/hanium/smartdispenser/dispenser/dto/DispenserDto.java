@@ -11,11 +11,10 @@ import lombok.Getter;
 public class DispenserDto {
 
     private final Long dispenserId;
-    private final String name;
     private final DispenserStatus status;
 
 
     public static DispenserDto of(Dispenser dispenser) {
-        return new DispenserDto(dispenser.getId(), dispenser.getName(), dispenser.getStatus());
+        return new DispenserDto(dispenser.getId(), dispenser.getStatus());
     }
 }

@@ -67,8 +67,8 @@ public class DispenserCommandFacade {
     }
 
 
-    public void createDispenser(String name, Long userId) {
+    public void createDispenser(Long userId) {
         User user = userService.findById(userId);
-        dispenserService.createDispenser(Dispenser.of(name, DispenserStatus.CONNECTED, user));
+        dispenserService.createDispenser(Dispenser.of(DispenserStatus.CONNECTED, user));
     }
 }

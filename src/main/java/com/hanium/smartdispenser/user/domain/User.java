@@ -31,8 +31,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    List<Dispenser> dispenserList = new ArrayList<>();
+    @OneToOne
+    private Dispenser dispenser;
 
     @OneToMany(mappedBy = "user")
     List<History> historyList = new ArrayList<>();
@@ -47,15 +47,6 @@ public class User extends BaseEntity {
         user.email = email;
         user.role = Role.ROLE_USER;
         return user;
-    }
-
-
-    /**
-     * 사용자에게 Dispenser를 등록하고 양방향 연관관계 설정합니다.
-     */
-    public void addDispenser(Dispenser dispenser) {
-        dispenserList.add(dispenser);
-        dispenser.assignUser(this);
     }
 
     /**

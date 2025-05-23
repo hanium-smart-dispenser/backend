@@ -29,7 +29,7 @@ class DispenserServiceTest {
     void validateDispenserStatus_throwException_whenDispenserNotReady() {
         User user = User.of("test1", "1234", "test@test.com");
         userRepository.save(user);
-        Dispenser dispenser = Dispenser.of("testDispenser", DispenserStatus.CONNECTED, user);
+        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user);
         dispenserService.createDispenser(dispenser);
 
         assertThatThrownBy(() ->
@@ -67,7 +67,7 @@ class DispenserServiceTest {
         User user = User.of("test1", "1234", "test@test.com");
         userRepository.save(user);
 
-        Dispenser dispenser = Dispenser.of("testDispenser", DispenserStatus.CONNECTED, user);
+        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user);
         Long dispenserId = dispenserService.createDispenser(dispenser);
 
         Dispenser findDispenser = dispenserService.findById(dispenserId);
