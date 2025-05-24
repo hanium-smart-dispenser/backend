@@ -6,6 +6,7 @@ import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandPayLoadDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandResponseDto;
 import com.hanium.smartdispenser.dispenser.exception.DispenserCommandSendFailedException;
+import com.hanium.smartdispenser.dispenser.mqtt.MqttService;
 import com.hanium.smartdispenser.history.HistoryService;
 import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.domain.HistoryStatus;
@@ -16,6 +17,7 @@ import com.hanium.smartdispenser.recipe.dto.IngredientWithAmountDto;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DispenserCommandFacade {
@@ -62,11 +65,10 @@ public class DispenserCommandFacade {
             throw e;
         }
 
-        history.markSuccess();
-        dispenser.updateStatus(DispenserStatus.READY);
-        return new DispenserCommandResponseDto(commandId, dispenserId, userId, recipeId, history.getStatus(), start, LocalDateTime.now());
-    }
+        log.info("[DISPENSER ID = [{}], COMMAND ID = [{}]", dispenserId, commandId);
 
+        return new DispenserCommandResponseDto(commandId, dispenserId, userId, recipeId, history.getId(), history.getStatus(), start, LocalDateTime.now());
+    }
 
     public void createDispenser(Long userId) {
         User user = userService.findById(userId);

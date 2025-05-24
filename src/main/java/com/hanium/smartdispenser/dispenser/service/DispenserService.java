@@ -44,4 +44,10 @@ public class DispenserService {
         }
     }
 
+    @Transactional
+    public void updateDispenserStatus(Long dispenserId, DispenserStatus status) {
+        Dispenser dispenser = findById(dispenserId);
+        dispenser.updateStatus(status);
+    }
+
 }

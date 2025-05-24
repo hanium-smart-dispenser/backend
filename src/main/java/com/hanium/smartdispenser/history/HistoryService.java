@@ -1,6 +1,7 @@
 package com.hanium.smartdispenser.history;
 
 import com.hanium.smartdispenser.history.domain.History;
+import com.hanium.smartdispenser.history.domain.HistoryStatus;
 import com.hanium.smartdispenser.history.repository.HistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,5 +27,19 @@ public class HistoryService {
 
     public Page<History> getHistoriesByUserAndDispenser(Long userId, Long dispenserId, Pageable pageable) {
         return historyRepository.findAllByUserIdAndDispenserIdWithPaging(userId, dispenserId, pageable);
+    }
+
+    public History findById(Long historyId) {
+        return historyRepository.findById(historyId).orElseThrow(() -> new HistoryNotFound(historyId));
+    }
+
+    @Transactional
+    public void updateHistoryStatus(Long historyId, HistoryStatus status) {
+        History history = findById(historyId);
+        if (status == HistoryStatus.SUCCESS) {
+            history.markSuccess();
+        } else {
+            history.updateStatus(status);
+        }
     }
 }

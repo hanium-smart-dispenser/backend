@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.dispenser.service;
+package com.hanium.smartdispenser.dispenser.mqtt;
 
 import com.hanium.smartdispenser.dispenser.exception.DispenserCommandSendFailedException;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Service;
 
+import static com.hanium.smartdispenser.dispenser.mqtt.MqttConstants.getDispenserCommandTopic;
+
 @Service
 @RequiredArgsConstructor
 public class MqttService {
@@ -14,7 +16,7 @@ public class MqttService {
     private final MqttClient mqttClient;
 
     public void sendCommand(Long dispenserId, String payload) {
-        String topic = "dispenser/" + dispenserId + "/command";
+        String topic = getDispenserCommandTopic(dispenserId);
 
         if (!mqttClient.isConnected()) {
             try {
