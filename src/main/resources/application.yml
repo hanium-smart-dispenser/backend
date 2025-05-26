@@ -21,3 +21,4 @@ jwt:
   token :
     expiration:
       access : 1800000    # 30분
+      refresh : 2419200000 # 4주

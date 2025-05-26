@@ -1,9 +1,6 @@
 package com.hanium.smartdispenser.auth;
 
-import com.hanium.smartdispenser.auth.dto.LoginRequestDto;
-import com.hanium.smartdispenser.auth.dto.LoginResponseDto;
-import com.hanium.smartdispenser.auth.dto.SignUpRequestDto;
-import com.hanium.smartdispenser.auth.dto.SignUpResponseDto;
+import com.hanium.smartdispenser.auth.dto.*;
 import com.hanium.smartdispenser.auth.exception.PasswordMismatchException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class LoginController {
     private final LoginService loginService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseDto> singUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
@@ -31,9 +29,17 @@ public class LoginController {
         return ResponseEntity.ok(loginService.login(loginRequestDto));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<Void> test() {
-        return ResponseEntity.ok().build();
-    }
+    @PostMapping("/auth/refresh")
+    public ResponseEntity<AccessTokenResponseDto> refresh(@RequestBody AccessTokenRequestDto request) {
+        if (jwtTokenProvider.validateToken(request.getRefreshToken())) {
+            jwtTokenProvider.deleteByUserId(jwtTokenProvider.getUserIdFromToken(request.getRefreshToken()));
+            // 예외 수정해야댐
+            throw new RuntimeException();
+        }
 
+        Long userId = jwtTokenProvider.getUserIdFromToken(request.getRefreshToken());
+        String newAccessToken = jwtTokenProvider.createAccessToken(userId, request.getUserRole());
+
+        return ResponseEntity.ok(new AccessTokenResponseDto(newAccessToken));
+    }
 }

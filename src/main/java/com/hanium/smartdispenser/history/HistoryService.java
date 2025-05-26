@@ -17,7 +17,7 @@ public class HistoryService {
     private final HistoryRepository historyRepository;
 
     @Transactional
-    public void createHistory(History history) {
+    public void saveHistory(History history) {
         historyRepository.save(history);
     }
 

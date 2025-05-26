@@ -8,10 +8,8 @@ import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.exception.UserNotFoundException;
 import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +27,10 @@ public class LoginService {
                 throw new InvalidLoginException();
             }
 
-            String token = jwtTokenProvider.createToken(user.getId(), user.getRole());
-            return new LoginResponseDto(token, user);
+            String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getUserRole());
+            String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
+
+            return new LoginResponseDto(accessToken, refreshToken, user);
         } catch (UserNotFoundException e) {
             throw new InvalidLoginException(e);
         }

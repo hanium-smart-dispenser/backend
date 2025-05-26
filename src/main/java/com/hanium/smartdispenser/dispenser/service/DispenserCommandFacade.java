@@ -52,7 +52,7 @@ public class DispenserCommandFacade {
 
         String commandId = UUID.randomUUID().toString();
         History history = History.of(user, dispenser, recipe, LocalDateTime.now());
-        historyService.createHistory(history);
+        historyService.saveHistory(history);
 
         try {
             DispenserCommandPayLoadDto payLoadDto = new DispenserCommandPayLoadDto(commandId, userId, recipeId, ingredients, LocalDateTime.now());

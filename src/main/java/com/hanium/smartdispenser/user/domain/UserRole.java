@@ -1,5 +1,5 @@
 package com.hanium.smartdispenser.user.domain;
 
-public enum Role {
+public enum UserRole {
     ROLE_USER, ROLE_ADMIN
 }

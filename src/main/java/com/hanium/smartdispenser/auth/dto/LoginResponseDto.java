@@ -7,16 +7,18 @@ import lombok.Getter;
 public class LoginResponseDto {
 
     private final String accessToken;
+    private final String refreshToken;
     private final long id;
     private final String name;
     private final String email;
     private final String role;
 
-    public LoginResponseDto(String accessToken, User user) {
+    public LoginResponseDto(String accessToken, String refreshToken, User user) {
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.id = user.getId();
         this.email = user.getEmail();
         this.name = user.getName();
-        this.role = String.valueOf(user.getRole());
+        this.role = String.valueOf(user.getUserRole());
     }
 }
