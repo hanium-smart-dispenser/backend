@@ -31,15 +31,15 @@ public class Dispenser extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "dispenser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DispenserSource> dispenserSourceList = new ArrayList<>();
+    private List<DispenserSauce> dispenserSauceList = new ArrayList<>();
 
 
     /**
-     * Dispenser에 DispenserSource를 등록하고 양방향 연관관계 설정합니다.
+     * Dispenser에 DispenserSauce를 등록하고 양방향 연관관계 설정합니다.
      */
-    public void addSource(DispenserSource dispenserSource) {
-        dispenserSourceList.add(dispenserSource);
-        dispenserSource.assignDispenser(this);
+    public void addSauce(DispenserSauce dispenserSauce) {
+        dispenserSauceList.add(dispenserSauce);
+        dispenserSauce.assignDispenser(this);
     }
 
     public static Dispenser of(DispenserStatus status, User user) {

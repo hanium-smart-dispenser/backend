@@ -11,11 +11,11 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "dispenser_source")
-public class DispenserSource {
+@Table(name = "dispenser_sauce")
+public class DispenserSauce {
 
     @Id @GeneratedValue
-    @Column(name = "dispenser_source_id")
+    @Column(name = "dispenser_sauce_id")
     private Long id;
     private int slot;
 
@@ -33,14 +33,15 @@ public class DispenserSource {
 
     /**
      * 연관관계 편의 메소드
-     * - Dispenser.addSource() 에서만 호출되어야 합니다.
+     * - Dispenser.addSauce() 에서만 호출되어야 합니다.
      */
     public void assignDispenser(Dispenser dispenser) {
         this.dispenser = dispenser;
     }
 
-    public static DispenserSource of(int slot, Ingredient ingredient) {
-        DispenserSource ds = new DispenserSource();
+    public static DispenserSauce of(int slot, Ingredient ingredient) {
+        DispenserSauce ds = new DispenserSauce();
+        ds.ingredient = ingredient;
         ds.slot = slot;
         return ds;
     }

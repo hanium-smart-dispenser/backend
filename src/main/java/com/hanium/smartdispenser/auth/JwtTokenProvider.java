@@ -74,7 +74,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
         String userId = claims.getSubject();
-        String role = claims.get("role", String.class);
+        String role = claims.get("userRole", String.class);
         UserPrincipal user = new UserPrincipal(Long.valueOf(userId), role);
 
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

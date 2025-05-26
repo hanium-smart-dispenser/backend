@@ -7,7 +7,7 @@ import com.hanium.smartdispenser.dispenser.dto.DispenserCommandResponseDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserStatusDto;
 import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
 import com.hanium.smartdispenser.dispenser.service.DispenserService;
-import com.hanium.smartdispenser.dispenser.service.DispenserSourceService;
+import com.hanium.smartdispenser.dispenser.service.DispenserSauceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,12 +20,12 @@ public class DispenserController {
 
     private final DispenserCommandFacade dispenserCommandFacade;
     private final DispenserService dispenserService;
-    private final DispenserSourceService dispenserSourceService;
+    private final DispenserSauceService dispenserSauceService;
 
     @GetMapping
     public DispenserStatusDto sendDispenserInfo(@AuthenticationPrincipal UserPrincipal user) {
         Dispenser dispenser = dispenserService.findByUser(user.getUserId());
-        return dispenserSourceService.getDispenserStatus(dispenser.getId());
+        return dispenserSauceService.getDispenserStatus(dispenser.getId());
     }
 
     @PostMapping("/command")

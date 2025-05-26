@@ -3,8 +3,7 @@ package com.hanium.smartdispenser.dispenser.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
-import com.hanium.smartdispenser.dispenser.domain.DispenserSource;
-import lombok.AllArgsConstructor;
+import com.hanium.smartdispenser.dispenser.domain.DispenserSauce;
 import lombok.Getter;
 
 import java.util.List;
@@ -14,18 +13,18 @@ import java.util.List;
 public class DispenserStatusDto {
 
     private final Long dispenserId;
-    private final List<SourceListDto> sources;
+    private final List<SauceListDto> sauces;
 
-    public static DispenserStatusDto of(Dispenser dispenser, List<DispenserSource> sourceList) {
-        List<SourceListDto> sourceListDtos = sourceList.stream().map((ds) -> new SourceListDto(
+    public static DispenserStatusDto of(Dispenser dispenser, List<DispenserSauce> sauceList) {
+        List<SauceListDto> sauceListDtos = sauceList.stream().map((ds) -> new SauceListDto(
                 ds.getSlot(), ds.getIngredient().getId(), ds.isLow())).toList();
-        return new DispenserStatusDto(dispenser.getId(), sourceListDtos);
+        return new DispenserStatusDto(dispenser.getId(), sauceListDtos);
     }
 
     @JsonCreator
     public DispenserStatusDto(@JsonProperty("dispenserId") Long dispenserId,
-                              @JsonProperty("sources") List<SourceListDto> sources) {
+                              @JsonProperty("sauces") List<SauceListDto> sauces) {
         this.dispenserId = dispenserId;
-        this.sources = sources;
+        this.sauces = sauces;
     }
 }
