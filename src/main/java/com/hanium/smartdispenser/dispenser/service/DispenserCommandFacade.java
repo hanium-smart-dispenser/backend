@@ -28,6 +28,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DispenserCommandFacade {
 
     private final HistoryService historyService;
@@ -39,7 +40,6 @@ public class DispenserCommandFacade {
     private final MqttService mqttService;
     private final JsonMapper<DispenserCommandPayLoadDto> mapper;
 
-    @Transactional
     public DispenserCommandResponseDto sendCommand(Long dispenserId, Long userId, Long recipeId) {
         LocalDateTime start = LocalDateTime.now();
         Dispenser dispenser = dispenserService.findById(dispenserId);

@@ -14,16 +14,16 @@ public class RecipeCreateRequestDto {
 
 
     @NotBlank
-    private final String name;
+    private final String recipeName;
 
     @Valid
     @NotEmpty
     private final List<IngredientWithAmountDto> ingredients;
 
     @JsonCreator
-    public RecipeCreateRequestDto(@JsonProperty("name") String name,
+    public RecipeCreateRequestDto(@JsonProperty("recipeName") String recipeName,
                                   @JsonProperty("ingredients") List<IngredientWithAmountDto> ingredients) {
-        this.name = name;
+        this.recipeName = recipeName;
         this.ingredients = ingredients;
     }
 }

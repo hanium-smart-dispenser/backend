@@ -22,7 +22,7 @@ public class RecipeController {
     public ResponseEntity<Void> createRecipe(
             @AuthenticationPrincipal UserPrincipal user,
             @RequestBody @Valid RecipeCreateRequestDto requestDto) {
-        recipeService.createRecipe(user.getUserId(), requestDto.getName(),
+        recipeService.createRecipe(user.getUserId(), requestDto.getRecipeName(),
                 requestDto.getIngredients());
         return ResponseEntity.ok().build();
     }

@@ -3,7 +3,6 @@ package com.hanium.smartdispenser.recipe.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hanium.smartdispenser.ingredient.domain.IngredientType;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -13,7 +12,6 @@ public class IngredientWithAmountDto {
     @NotNull
     private final Long ingredientId;
 
-    @Min(value = 1)
     private final int amount;
     private final IngredientType type;
 

@@ -38,10 +38,7 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 //경로 재설정 해야됨
                 .authorizeHttpRequests(
-                        (authorize) -> authorize.requestMatchers(
-                                        "api/recipes")
-                                .authenticated()
-                                .anyRequest().permitAll()
+                        (authorize) -> authorize.anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 

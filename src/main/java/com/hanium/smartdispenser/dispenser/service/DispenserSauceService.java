@@ -25,7 +25,6 @@ public class DispenserSauceService {
     private final IngredientService ingredientService;
 
 
-    @Transactional
     public void updateStatus(DispenserStatusDto statusDto) {
         Dispenser dispenser = dispenserService.findById(statusDto.getDispenserId());
         List<SauceListDto> sauceList = statusDto.getSauces();

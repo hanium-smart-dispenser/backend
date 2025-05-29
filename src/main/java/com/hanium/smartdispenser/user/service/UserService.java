@@ -15,14 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
     public User createUser(UserCreateDto dto) {
 
         User user = User.of(dto.getName(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());

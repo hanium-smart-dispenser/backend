@@ -14,14 +14,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final UserService userService;
     private final IngredientService ingredientService;
 
-    @Transactional
     public void createRecipe(Long userId, String recipeName, List<IngredientWithAmountDto> recipeIngredients) {
         User user = userService.findById(userId);
         Recipe recipe = Recipe.of(recipeName, user);

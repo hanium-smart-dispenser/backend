@@ -11,12 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class HistoryService {
 
     private final HistoryRepository historyRepository;
 
-    @Transactional
     public void saveHistory(History history) {
         historyRepository.save(history);
     }
@@ -33,7 +32,6 @@ public class HistoryService {
         return historyRepository.findById(historyId).orElseThrow(() -> new HistoryNotFound(historyId));
     }
 
-    @Transactional
     public void updateHistoryStatus(Long historyId, HistoryStatus status) {
         History history = findById(historyId);
         if (status == HistoryStatus.SUCCESS) {
