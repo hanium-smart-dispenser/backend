@@ -9,7 +9,6 @@ public class LoginResponseDto {
     private final String accessToken;
     private final String refreshToken;
     private final long id;
-    private final String name;
     private final String email;
     private final String role;
 
@@ -18,7 +17,6 @@ public class LoginResponseDto {
         this.refreshToken = refreshToken;
         this.id = user.getId();
         this.email = user.getEmail();
-        this.name = user.getName();
         this.role = String.valueOf(user.getUserRole());
     }
 }

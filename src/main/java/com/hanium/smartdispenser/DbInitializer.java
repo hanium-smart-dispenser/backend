@@ -17,10 +17,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -35,9 +35,12 @@ public class DbInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        User testUser1 = User.of("testUser1", passwordEncoder.encode("1234"), "aaa@aaa.com");
-        User testUser2 = User.of("testUser2", passwordEncoder.encode("1234"), "bbb@bbb.com");
-        User testUser3 = User.of("testUser3", passwordEncoder.encode("1234"), "ccc@ccc.com");
+        User testUser1 = User.of(passwordEncoder.encode("1234"), "aaa@aaa.com", UUID.randomUUID().toString());
+        User testUser2 = User.of(passwordEncoder.encode("1234"), "bbb@bbb.com", UUID.randomUUID().toString());
+        User testUser3 = User.of(passwordEncoder.encode("1234"), "ccc@ccc.com", UUID.randomUUID().toString());
+        testUser1.convertGuestToUser();
+        testUser2.convertGuestToUser();
+        testUser3.convertGuestToUser();
 
         userRepository.save(testUser1);
         userRepository.save(testUser2);

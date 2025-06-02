@@ -10,11 +10,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserResponseDto {
 
-    private final String name;
     private final String email;
 
     public static UserResponseDto of(User user) {
-        return new UserResponseDto(user.getName(), user.getEmail());
+        return new UserResponseDto(user.getEmail());
     }
 
 }

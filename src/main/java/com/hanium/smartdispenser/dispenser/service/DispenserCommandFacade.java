@@ -74,4 +74,9 @@ public class DispenserCommandFacade {
         User user = userService.findById(userId);
         dispenserService.createDispenser(Dispenser.of(DispenserStatus.CONNECTED, user));
     }
+
+    public void assignDispenserToGuest(String guestId) {
+        User user = userService.findByGuestId(guestId);
+        createDispenser(user.getId());
+    }
 }

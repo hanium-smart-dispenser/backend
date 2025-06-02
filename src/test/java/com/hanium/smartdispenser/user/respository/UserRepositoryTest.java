@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -75,7 +76,7 @@ class UserRepositoryTest {
     @DisplayName("User를 Email로 조회 할 수 있다.")
     void findByEmail_returnUser_whenEmailExist() {
         String email = "aaa@gmail.com";
-        User user = User.of("회원1", "123123", email);
+        User user = User.of("123123", email, UUID.randomUUID().toString());
         userRepository.save(user);
         Optional<User> findUser = userRepository.findByEmail(email);
 

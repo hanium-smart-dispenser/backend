@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -24,7 +25,7 @@ public class UserService {
 
     public User createUser(UserCreateDto dto) {
 
-        User user = User.of(dto.getName(), passwordEncoder.encode(dto.getPassword()), dto.getEmail());
+        User user = User.of(passwordEncoder.encode(dto.getPassword()), dto.getEmail(), UUID.randomUUID().toString());
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEmailException(user.getEmail());
@@ -35,6 +36,7 @@ public class UserService {
         // 이 코드 넣어야되나 고민 해봐야 됨.
 
         try {
+            user.convertGuestToUser();
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEmailException(e, user.getEmail());
@@ -50,4 +52,10 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
     }
 
+    public User findByGuestId(String guestId) {
+        return userRepository.findByUuid(guestId).orElseGet(() -> {
+            User user = User.of(null, null, guestId);
+            return userRepository.save(user);
+        });
+    }
 }
