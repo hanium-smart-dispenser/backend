@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     private final LoginService loginService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseDto> singUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
@@ -31,15 +32,14 @@ public class LoginController {
 
     @PostMapping("/auth/refresh")
     public ResponseEntity<AccessTokenResponseDto> refresh(@RequestBody AccessTokenRequestDto request) {
-        if (jwtTokenProvider.validateToken(request.getRefreshToken())) {
-            jwtTokenProvider.deleteByUserId(jwtTokenProvider.getUserIdFromToken(request.getRefreshToken()));
-            // 예외 수정해야댐
-            throw new RuntimeException();
+        Long userId = refreshTokenService.get(request.getRefreshToken());
+        if (refreshTokenService.validate(request.getRefreshToken(), userId)) {
+
+            //예외 수저할것
+            throw new RuntimeException("refresh 토큰 오류");
         }
 
-        Long userId = jwtTokenProvider.getUserIdFromToken(request.getRefreshToken());
         String newAccessToken = jwtTokenProvider.createAccessToken(userId, request.getUserRole());
-
         return ResponseEntity.ok(new AccessTokenResponseDto(newAccessToken));
     }
 }

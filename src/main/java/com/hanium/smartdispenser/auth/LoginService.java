@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -18,6 +20,7 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         try {
@@ -28,7 +31,8 @@ public class LoginService {
             }
 
             String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getUserRole());
-            String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
+            String refreshToken = UUID.randomUUID().toString();
+            refreshTokenService.save(refreshToken, user.getId());
 
             return new LoginResponseDto(accessToken, refreshToken, user);
         } catch (UserNotFoundException e) {
