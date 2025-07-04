@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/dispenser")
+@RequestMapping("api/dispensers")
 public class DispenserController {
 
     private final DispenserCommandFacade dispenserCommandFacade;
     private final DispenserService dispenserService;
     private final DispenserSauceService dispenserSauceService;
 
-    @GetMapping
+    @GetMapping("/me")
     public DispenserStatusDto sendDispenserInfo(@AuthenticationPrincipal UserPrincipal user) {
         Dispenser dispenser = dispenserService.findByUser(user.getUserId());
         return dispenserSauceService.getDispenserStatus(dispenser.getId());
     }
 
-    @PostMapping("/command")
+    @PostMapping("/me/command")
     public ResponseEntity<DispenserCommandResponseDto> sendCommand(
             @AuthenticationPrincipal UserPrincipal user,
             @RequestBody DispenserCommandRequestDto requestDto) {

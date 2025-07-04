@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class LoginController {
     private final LoginService loginService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -30,7 +30,7 @@ public class LoginController {
         return ResponseEntity.ok(loginService.login(loginRequestDto));
     }
 
-    @PostMapping("/auth/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<AccessTokenResponseDto> refresh(@RequestBody AccessTokenRequestDto request) {
         Long userId = refreshTokenService.get(request.getRefreshToken());
         if (refreshTokenService.validate(request.getRefreshToken(), userId)) {

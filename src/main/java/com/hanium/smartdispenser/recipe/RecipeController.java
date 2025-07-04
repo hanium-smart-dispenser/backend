@@ -18,7 +18,7 @@ public class RecipeController {
 
     private final RecipeService recipeService;
 
-    @PostMapping
+    @PostMapping("/me")
     public ResponseEntity<Void> createRecipe(
             @AuthenticationPrincipal UserPrincipal user,
             @RequestBody @Valid RecipeCreateRequestDto requestDto) {

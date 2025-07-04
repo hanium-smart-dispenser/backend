@@ -17,7 +17,7 @@ public class HistoryController {
 
     private final HistoryQueryFacade historyQueryFacade;
 
-    @GetMapping
+    @GetMapping("/me")
     public Page<HistoryResponseDto> getHistory(@AuthenticationPrincipal UserPrincipal user, Pageable pageable) {
         return historyQueryFacade.getHistoriesByUser(user.getUserId(), pageable);
     }
