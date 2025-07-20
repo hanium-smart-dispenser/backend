@@ -40,6 +40,26 @@ public class DispenserCommandFacade {
     private final MqttService mqttService;
     private final JsonMapper<DispenserCommandPayLoadDto> mapper;
 
+    public DispenserCommandResponseDto simpleSendCommand(Long dispenserId, Long recipeId) {
+        LocalDateTime start = LocalDateTime.now();
+        Dispenser dispenser = dispenserService.findById(dispenserId);
+        Recipe recipe = recipeService.findById(recipeId);
+
+        List<IngredientWithAmountDto> ingredients = recipeParsingFacade.getIngredientsList(recipeId);
+
+        dispenserService.validateDispenserStatus(dispenserId);
+
+        String commandId = UUID.randomUUID().toString();
+
+        DispenserCommandPayLoadDto payLoadDto = new DispenserCommandPayLoadDto(
+                commandId, null, recipeId, ingredients, LocalDateTime.now());
+        String payload = mapper.toJson(payLoadDto);
+        mqttService.sendCommand(dispenserId, payload);
+
+        return new DispenserCommandResponseDto(
+                commandId, dispenserId, null, recipeId, null, null, start, LocalDateTime.now());
+    }
+
     public DispenserCommandResponseDto sendCommand(Long dispenserId, Long userId, Long recipeId) {
         LocalDateTime start = LocalDateTime.now();
         Dispenser dispenser = dispenserService.findById(dispenserId);
@@ -51,11 +71,13 @@ public class DispenserCommandFacade {
         dispenserService.validateDispenserStatus(dispenserId);
 
         String commandId = UUID.randomUUID().toString();
+        //이력 저장
         History history = History.of(user, dispenser, recipe, LocalDateTime.now());
         historyService.saveHistory(history);
 
         try {
-            DispenserCommandPayLoadDto payLoadDto = new DispenserCommandPayLoadDto(commandId, userId, recipeId, ingredients, LocalDateTime.now());
+            DispenserCommandPayLoadDto payLoadDto = new DispenserCommandPayLoadDto(
+                    commandId, userId, recipeId, ingredients, LocalDateTime.now());
             dispenser.updateStatus(DispenserStatus.BUSY);
             String payload = mapper.toJson(payLoadDto);
             mqttService.sendCommand(dispenserId, payload);
@@ -67,7 +89,8 @@ public class DispenserCommandFacade {
 
         log.info("[DISPENSER ID = [{}], COMMAND ID = [{}]", dispenserId, commandId);
 
-        return new DispenserCommandResponseDto(commandId, dispenserId, userId, recipeId, history.getId(), history.getStatus(), start, LocalDateTime.now());
+        return new DispenserCommandResponseDto(
+                commandId, dispenserId, userId, recipeId, history.getId(), history.getStatus(), start, LocalDateTime.now());
     }
 
     public void createDispenser(Long userId) {

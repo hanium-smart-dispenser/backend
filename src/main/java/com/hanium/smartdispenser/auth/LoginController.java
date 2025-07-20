@@ -1,6 +1,7 @@
 package com.hanium.smartdispenser.auth;
 
 import com.hanium.smartdispenser.auth.dto.*;
+import com.hanium.smartdispenser.auth.exception.InvalidLoginException;
 import com.hanium.smartdispenser.auth.exception.PasswordMismatchException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,7 @@ public class LoginController {
     public ResponseEntity<AccessTokenResponseDto> refresh(@RequestBody AccessTokenRequestDto request) {
         Long userId = refreshTokenService.get(request.getRefreshToken());
         if (refreshTokenService.validate(request.getRefreshToken(), userId)) {
-
-            //예외 수저할것
-            throw new RuntimeException("refresh 토큰 오류");
+            throw new InvalidLoginException();
         }
 
         String newAccessToken = jwtTokenProvider.createAccessToken(userId, request.getUserRole());

@@ -32,6 +32,13 @@ public class DispenserController {
     public ResponseEntity<DispenserCommandResponseDto> sendCommand(
             @AuthenticationPrincipal UserPrincipal user,
             @RequestBody DispenserCommandRequestDto requestDto) {
+
+        //비회원 로직
+        if (user == null) {
+            DispenserCommandResponseDto responseDto = dispenserCommandFacade.simpleSendCommand(requestDto.getDispenserId(), requestDto.getRecipeId());
+            return ResponseEntity.ok(responseDto);
+        }
+
         Dispenser dispenser = dispenserService.findByUser(user.getUserId());
         DispenserCommandResponseDto responseDto = dispenserCommandFacade.sendCommand(
                 dispenser.getId(), user.getUserId(), requestDto.getRecipeId());
