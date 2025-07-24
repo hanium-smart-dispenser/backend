@@ -25,7 +25,7 @@ public class MqttListener {
 
     private final MqttClient mqttClient;
     private final JsonMapper<DispenserStatusDto> statusMapper;
-    private final JsonMapper<DispenserCommandSimpleResponseDto> reponseMapper;
+    private final JsonMapper<DispenserCommandSimpleResponseDto> responseMapper;
     private final DispenserSauceService dispenserSauceService;
     private final DispenserService dispenserService;
     private final HistoryService historyService;
@@ -44,7 +44,7 @@ public class MqttListener {
     }
     void getDispenserCommandResponse(String topic, MqttMessage message) {
         String payload = new String(message.getPayload());
-        DispenserCommandSimpleResponseDto responseDto = reponseMapper.fromJson(payload, DispenserCommandSimpleResponseDto.class);
+        DispenserCommandSimpleResponseDto responseDto = responseMapper.fromJson(payload, DispenserCommandSimpleResponseDto.class);
         HistoryStatus status = responseDto.getStatus();
 
         if (status == HistoryStatus.SUCCESS) {

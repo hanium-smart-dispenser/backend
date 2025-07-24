@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/smart_dispenser_db
-    username: user
-    password: 123
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -13,7 +13,7 @@ spring:
         format_sql: true
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
 logging:
@@ -21,7 +21,7 @@ logging:
     org.hibernate.SQL: trace
 
 jwt:
-  key: vDqsCFztXhjOSXE7GIM9OT1Y3txJWO1J
+  key: ${JWT_SECRET_KEY}
   token :
     expiration:
       access : 1800000    # 30분
