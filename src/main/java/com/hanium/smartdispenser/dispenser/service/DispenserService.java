@@ -6,6 +6,7 @@ import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.exception.DispenserNotFoundException;
 import com.hanium.smartdispenser.dispenser.exception.UnauthorizedDispenserAccessException;
+import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class DispenserService {
 
     private final DispenserRepository dispenserRepository;
+    private final UserService userService;
     public Dispenser findById(Long dispenserId) {
         return dispenserRepository.findById(dispenserId).orElseThrow(() -> new DispenserNotFoundException(dispenserId));
+    }
+
+    public Dispenser findByUuid(String uuid) {
+        return dispenserRepository.findByUuid(uuid);
     }
 
     public Dispenser findByUser(Long userId) {
@@ -47,6 +53,11 @@ public class DispenserService {
     public void updateDispenserStatus(Long dispenserId, DispenserStatus status) {
         Dispenser dispenser = findById(dispenserId);
         dispenser.updateStatus(status);
+    }
+
+    public void assignUser(Long userId, Long dispenserId) {
+        Dispenser dispenser = findById(dispenserId);
+        dispenser.assignUser(userService.findById(userId));
     }
 
 }

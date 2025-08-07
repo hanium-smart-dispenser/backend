@@ -5,6 +5,7 @@ import com.hanium.smartdispenser.auth.exception.InvalidLoginException;
 import com.hanium.smartdispenser.auth.exception.PasswordMismatchException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +41,10 @@ public class LoginController {
 
         String newAccessToken = jwtTokenProvider.createAccessToken(userId, request.getUserRole());
         return ResponseEntity.ok(new AccessTokenResponseDto(newAccessToken));
+    }
+
+    @PostMapping("/guestLogin")
+    public ResponseEntity<LoginResponseDto> guestLogin(@RequestBody @Valid String guestUuid) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(loginService.guestLogin(guestUuid));
     }
 }

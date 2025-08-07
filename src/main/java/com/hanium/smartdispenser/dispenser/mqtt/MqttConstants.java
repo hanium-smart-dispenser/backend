@@ -8,4 +8,6 @@ public class MqttConstants {
 
     public static final String DISPENSER_STATUS_ALL = "dispenser/+/status";
     public static final String DISPENSER_COMMAND_RESPONSE_ALL = "dispenser/+/command/response";
+
+    public static final String DISPENSER_REGISTER_ALL = "dispenser/+/register";
 }

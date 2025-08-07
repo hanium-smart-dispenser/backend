@@ -46,8 +46,8 @@ public class DbInitializer implements ApplicationRunner {
         userRepository.save(testUser2);
         userRepository.save(testUser3);
 
-        Dispenser dispenser1 = dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser1));
-        dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser2));
+        Dispenser dispenser1 = dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser1, UUID.randomUUID().toString()));
+        dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser2, UUID.randomUUID().toString()));
 
         Ingredient redPepperPowder = ingredientRepository.save(Ingredient.of("고춧가루", IngredientType.POWDER));
         Ingredient sugar = ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));

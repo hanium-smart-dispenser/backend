@@ -23,6 +23,8 @@ public class Dispenser extends BaseEntity {
     @Column(name = "dispenser_id")
     private Long id;
 
+    private String uuid;
+
     @Enumerated(EnumType.STRING)
     private DispenserStatus status;
 
@@ -42,15 +44,19 @@ public class Dispenser extends BaseEntity {
         dispenserSauce.assignDispenser(this);
     }
 
-    public static Dispenser of(DispenserStatus status, User user) {
+    public static Dispenser of(DispenserStatus status, User user, String uuid) {
         Dispenser dispenser = new Dispenser();
         dispenser.status = status;
         dispenser.user = user;
-
+        dispenser.uuid = uuid;
         return dispenser;
     }
 
     public void updateStatus(DispenserStatus status) {
         this.status = status;
+    }
+
+    public void assignUser(User user) {
+        this.user = user;
     }
 }

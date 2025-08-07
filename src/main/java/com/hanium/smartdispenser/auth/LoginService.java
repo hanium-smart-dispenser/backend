@@ -5,6 +5,7 @@ import com.hanium.smartdispenser.auth.dto.LoginResponseDto;
 import com.hanium.smartdispenser.auth.dto.SignUpRequestDto;
 import com.hanium.smartdispenser.auth.exception.InvalidLoginException;
 import com.hanium.smartdispenser.user.domain.User;
+import com.hanium.smartdispenser.user.dto.UserCreateDto;
 import com.hanium.smartdispenser.user.exception.UserNotFoundException;
 import com.hanium.smartdispenser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -42,5 +43,16 @@ public class LoginService {
 
     public User singUp(SignUpRequestDto signUpRequestDto) {
         return userService.createUser(signUpRequestDto.toUserCreateDto());
+    }
+
+    public LoginResponseDto guestLogin(String uuid) {
+        User user = userService.createGuest(uuid);
+
+        String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getUserRole());
+        String refreshToken = UUID.randomUUID().toString();
+        refreshTokenService.save(refreshToken, user.getId());
+
+        return new LoginResponseDto(accessToken, refreshToken, user);
+
     }
 }

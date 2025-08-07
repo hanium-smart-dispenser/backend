@@ -25,7 +25,7 @@ public class UserService {
 
     public User createUser(UserCreateDto dto) {
 
-        User user = User.of(passwordEncoder.encode(dto.getPassword()), dto.getEmail(), UUID.randomUUID().toString());
+        User user = User.of(passwordEncoder.encode(dto.getPassword()), dto.getEmail(), null);
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEmailException(user.getEmail());
@@ -43,6 +43,12 @@ public class UserService {
         }
     }
 
+    public User createGuest(String uuid) {
+        User user = User.of(null, null, uuid);
+        userRepository.save(user);
+        return user;
+    }
+
     public User findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.orElseThrow(() -> new UserNotFoundException(email));
@@ -50,12 +56,5 @@ public class UserService {
 
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
-    }
-
-    public User findByGuestId(String guestId) {
-        return userRepository.findByUuid(guestId).orElseGet(() -> {
-            User user = User.of(null, null, guestId);
-            return userRepository.save(user);
-        });
     }
 }

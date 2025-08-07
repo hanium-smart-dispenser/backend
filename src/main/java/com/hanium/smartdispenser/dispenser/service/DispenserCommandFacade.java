@@ -92,14 +92,4 @@ public class DispenserCommandFacade {
         return new DispenserCommandResponseDto(
                 commandId, dispenserId, userId, recipeId, history.getId(), history.getStatus(), start, LocalDateTime.now());
     }
-
-    public void createDispenser(Long userId) {
-        User user = userService.findById(userId);
-        dispenserService.createDispenser(Dispenser.of(DispenserStatus.CONNECTED, user));
-    }
-
-    public void assignDispenserToGuest(String guestId) {
-        User user = userService.findByGuestId(guestId);
-        createDispenser(user.getId());
-    }
 }
