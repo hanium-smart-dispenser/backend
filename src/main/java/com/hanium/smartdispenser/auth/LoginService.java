@@ -46,7 +46,8 @@ public class LoginService {
     }
 
     public LoginResponseDto guestLogin(String uuid) {
-        User user = userService.createGuest(uuid);
+
+        User user = userService.isExist(uuid) ? userService.findByUUid(uuid) : userService.createGuest(uuid);
 
         String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getUserRole());
         String refreshToken = UUID.randomUUID().toString();

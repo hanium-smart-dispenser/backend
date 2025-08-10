@@ -26,7 +26,7 @@ public class DispenserSauceService {
 
 
     public void updateStatus(DispenserStatusDto statusDto) {
-        Dispenser dispenser = dispenserService.findById(statusDto.getDispenserId());
+        Dispenser dispenser = dispenserService.findByUuid(statusDto.getUuid());
         List<SauceListDto> sauceList = statusDto.getSauces();
         for (SauceListDto sauceListDto : sauceList) {
             Ingredient ingredient = ingredientService.findById(sauceListDto.getIngredientId());

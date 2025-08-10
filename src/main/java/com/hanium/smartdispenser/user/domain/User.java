@@ -21,7 +21,10 @@ public class User extends BaseEntity {
     @GeneratedValue
     @Column(name = "user_id")
     private Long id;
+
+    @Column(unique = true)
     private String uuid;
+
     private String password;
 
     @Column(unique = true)

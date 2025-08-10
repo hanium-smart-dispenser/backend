@@ -44,7 +44,8 @@ public class LoginController {
     }
 
     @PostMapping("/guestLogin")
-    public ResponseEntity<LoginResponseDto> guestLogin(@RequestBody @Valid String guestUuid) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(loginService.guestLogin(guestUuid));
+    public ResponseEntity<LoginResponseDto> guestLogin(@RequestBody @Valid GuestLoginRequestDto request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(loginService.guestLogin(request.getUuid()));
     }
+
 }
