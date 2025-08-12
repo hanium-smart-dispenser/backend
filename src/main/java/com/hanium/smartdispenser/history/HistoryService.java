@@ -2,6 +2,7 @@ package com.hanium.smartdispenser.history;
 
 import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.domain.HistoryStatus;
+import com.hanium.smartdispenser.history.dto.HistoryDto;
 import com.hanium.smartdispenser.history.repository.HistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ public class HistoryService {
         historyRepository.save(history);
     }
 
-    public Page<History> getHistoriesByUser(Long userId, Pageable pageable) {
+    public Page<HistoryDto> getHistoriesByUser(Long userId, Pageable pageable) {
         return historyRepository.findAllByUserIdWithPaging(userId, pageable);
     }
 

@@ -1,7 +1,7 @@
 package com.hanium.smartdispenser.history;
 
 import com.hanium.smartdispenser.auth.UserPrincipal;
-import com.hanium.smartdispenser.history.dto.HistoryResponseDto;
+import com.hanium.smartdispenser.history.dto.HistoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ public class HistoryController {
     private final HistoryQueryFacade historyQueryFacade;
 
     @GetMapping("/me")
-    public Page<HistoryResponseDto> getHistory(@AuthenticationPrincipal UserPrincipal user, Pageable pageable) {
+    public Page<HistoryDto> getHistory(@AuthenticationPrincipal UserPrincipal user, Pageable pageable) {
         return historyQueryFacade.getHistoriesByUser(user.getUserId(), pageable);
     }
 }

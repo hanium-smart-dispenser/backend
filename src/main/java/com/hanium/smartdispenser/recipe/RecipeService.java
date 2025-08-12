@@ -21,7 +21,7 @@ public class RecipeService {
     private final UserService userService;
     private final IngredientService ingredientService;
 
-    public void createRecipe(Long userId, String recipeName, List<IngredientWithAmountDto> recipeIngredients) {
+    public Recipe createRecipe(Long userId, String recipeName, List<IngredientWithAmountDto> recipeIngredients) {
         User user = userService.findById(userId);
         Recipe recipe = Recipe.of(recipeName, user);
 
@@ -30,7 +30,7 @@ public class RecipeService {
             recipe.addIngredient(ingredient, recipeIngredient.getAmount());
         }
 
-        recipeRepository.save(recipe);
+        return recipeRepository.save(recipe);
     }
 
     public Recipe findById(Long recipeId) {
