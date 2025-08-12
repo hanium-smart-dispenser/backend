@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.auth.config;
+package com.hanium.smartdispenser.common.config;
 
 import com.hanium.smartdispenser.auth.exception.SecurityExceptionHandler;
 import com.hanium.smartdispenser.auth.JwtFilter;

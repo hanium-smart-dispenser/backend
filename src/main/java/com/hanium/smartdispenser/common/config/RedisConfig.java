@@ -1,4 +1,4 @@
-package com.hanium.smartdispenser.auth.config;
+package com.hanium.smartdispenser.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
