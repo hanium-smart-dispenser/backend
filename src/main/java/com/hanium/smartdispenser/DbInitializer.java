@@ -7,7 +7,7 @@ import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
 import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.repository.HistoryRepository;
-import com.hanium.smartdispenser.ingredient.IngredientRepository;
+import com.hanium.smartdispenser.ingredient.repository.IngredientRepository;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.ingredient.domain.IngredientType;
 import com.hanium.smartdispenser.recipe.RecipeService;

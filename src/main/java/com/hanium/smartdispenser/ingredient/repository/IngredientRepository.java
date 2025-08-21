@@ -1,7 +1,11 @@
-package com.hanium.smartdispenser.ingredient;
+package com.hanium.smartdispenser.ingredient.repository;
 
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
+
+    Optional<Ingredient> findByName(String name);
 }
