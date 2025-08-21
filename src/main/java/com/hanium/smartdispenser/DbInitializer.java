@@ -5,10 +5,13 @@ import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
 import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
+import com.hanium.smartdispenser.history.domain.History;
+import com.hanium.smartdispenser.history.repository.HistoryRepository;
 import com.hanium.smartdispenser.ingredient.IngredientRepository;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.ingredient.domain.IngredientType;
 import com.hanium.smartdispenser.recipe.RecipeService;
+import com.hanium.smartdispenser.recipe.domain.Recipe;
 import com.hanium.smartdispenser.recipe.dto.IngredientWithAmountDto;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.respository.UserRepository;
@@ -18,6 +21,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +36,7 @@ public class DbInitializer implements ApplicationRunner {
     private final RecipeService recipeService;
     private final PasswordEncoder passwordEncoder;
     private final DispenserCommandFacade dispenserCommandFacade;
+    private final HistoryRepository historyRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -63,8 +68,8 @@ public class DbInitializer implements ApplicationRunner {
         ingredients2.add(new IngredientWithAmountDto(1L, 1, IngredientType.LIQUID));
         ingredients2.add(new IngredientWithAmountDto(2L, 2, IngredientType.LIQUID));
 
-        recipeService.createRecipe(testUser1.getId(), "testRecipe1", ingredients1);
-        recipeService.createRecipe(testUser2.getId(), "testRecipe2", ingredients2);
+        Recipe testRecipe1 = recipeService.createRecipe(testUser1.getId(), "testRecipe1", ingredients1);
+        Recipe testRecipe2 = recipeService.createRecipe(testUser2.getId(), "testRecipe2", ingredients2);
 
         dispenser1.addSauce(DispenserSauce.of(1, redPepperPowder));
         dispenser1.addSauce(DispenserSauce.of(2, sugar));
@@ -76,6 +81,13 @@ public class DbInitializer implements ApplicationRunner {
         dispenserRepository.save(dispenser1);
 
         dispenserCommandFacade.sendCommand(1L, 1L, 1L);
+
+        History history1 = History.of(testUser1, dispenser1, testRecipe2, LocalDateTime.now());
+        history1.markSuccess();
+        historyRepository.save(history1);
+        History history2 = History.of(testUser1, dispenser1, testRecipe1, LocalDateTime.now());
+        history2.markSuccess();
+        historyRepository.save(history2);
 
     }
 }
