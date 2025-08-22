@@ -2,8 +2,6 @@ package com.hanium.smartdispenser.recipe;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hanium.smartdispenser.ai.AiService;
-import com.hanium.smartdispenser.ai.dto.AutoIngredient;
-import com.hanium.smartdispenser.ai.dto.SolidAutoIngredient;
 import com.hanium.smartdispenser.ingredient.IngredientService;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.ingredient.domain.IngredientSnapshot;
@@ -58,7 +56,7 @@ public class RecipeAssembler {
         return payload;
     }
 
-    /** auto g 계산: liquid는 target_g, solid는 estimated_delivered_g → per_pump_g * pump_counts → target_g 순서 */
+    /** auto g 계산: liquid는 target_g, powder는 estimated_delivered_g → per_pump_g * pump_counts → target_g 순서 */
     private int computeAutoGrams(JsonNode n) {
         // liquid: target_g 우선
         if ("liquid".equalsIgnoreCase(n.path("type").asText(null))) {
@@ -83,7 +81,7 @@ public class RecipeAssembler {
         if( type == null) return IngredientType.POWDER;
         return switch (type.toLowerCase()) {
             case "liquid" -> IngredientType.LIQUID;
-            case "solid" -> IngredientType.POWDER;
+            case "powder" -> IngredientType.POWDER;
             default -> IngredientType.POWDER;
         };
     }

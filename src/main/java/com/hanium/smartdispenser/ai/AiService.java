@@ -21,7 +21,7 @@ public class AiService {
     private final ObjectMapper objectMapper;
 
     public JsonNode getRecipeRaw(String prompt) {
-        String url = "http://host.docker.internal:5000/test";
+        String url = "http://host.docker.internal:5000/get-recipe";
 
 
         HttpHeaders headers = new HttpHeaders();
