@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hanium.smartdispenser.auth.UserPrincipal;
 import com.hanium.smartdispenser.ingredient.IngredientSnapshotService;
 import com.hanium.smartdispenser.ingredient.domain.IngredientSnapshot;
+import com.hanium.smartdispenser.recipe.domain.Recipe;
 import com.hanium.smartdispenser.recipe.dto.RecipeAiCreateDto;
-import com.hanium.smartdispenser.recipe.dto.RecipeCreateRequestDto;
+import com.hanium.smartdispenser.recipe.dto.RecipeDto;
 import com.hanium.smartdispenser.user.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,16 +22,6 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final RecipeAssembler recipeAssembler;
     private final IngredientSnapshotService ingredientSnapshotService;
-
-    @PostMapping("/me")
-    public ResponseEntity<Void> createRecipe(
-            @AuthenticationPrincipal UserPrincipal user,
-            @RequestBody @Valid RecipeCreateRequestDto requestDto) {
-        recipeService.createRecipe(user.getUserId(), requestDto.getRecipeName(),
-                requestDto.getIngredients());
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/ai")
     public ResponseEntity<Void> createRecipeToAi(
             @AuthenticationPrincipal UserPrincipal user,
@@ -41,9 +31,15 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<RecipeDto> getRecipe(@PathVariable Long id) {
+        Recipe recipe = recipeService.findByIdWithIngredients(id);
+        return ResponseEntity.ok(new RecipeDto(recipe));
+    }
+
     @GetMapping("/{id}/manual")
-    public JsonNode getIngredientSnapshot(@PathVariable Long recipeId) {
-        IngredientSnapshot ingredientSnapshot = ingredientSnapshotService.findByRecipeId(recipeId);
+    public JsonNode getIngredientSnapshot(@PathVariable Long id) {
+        IngredientSnapshot ingredientSnapshot = ingredientSnapshotService.findByRecipeId(id);
         return ingredientSnapshot.getPayload();
     }
 }

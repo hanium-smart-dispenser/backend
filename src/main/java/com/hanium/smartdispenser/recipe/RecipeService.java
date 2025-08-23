@@ -37,4 +37,7 @@ public class RecipeService {
         return recipeRepository.findById(recipeId).orElseThrow(() -> new RecipeNotFoundException(recipeId));
     }
 
+    public Recipe findByIdWithIngredients(Long recipeId) {
+        return recipeRepository.findByIdWithIngredients(recipeId).orElseThrow(() -> new RecipeNotFoundException(recipeId));
+    }
 }
