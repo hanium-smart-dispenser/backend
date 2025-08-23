@@ -10,7 +10,6 @@ import com.hanium.smartdispenser.dispenser.dto.DispenserCommandSimpleResponseDto
 import com.hanium.smartdispenser.dispenser.dto.DispenserRegisterRequestDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserStatusDto;
 import com.hanium.smartdispenser.dispenser.service.DispenserService;
-import com.hanium.smartdispenser.dispenser.service.DispenserSauceService;
 import com.hanium.smartdispenser.history.HistoryService;
 import com.hanium.smartdispenser.history.domain.HistoryStatus;
 import jakarta.annotation.PostConstruct;
@@ -34,7 +33,6 @@ public class MqttListener {
     private final JsonMapper<DispenserStatusDto> statusMapper;
     private final JsonMapper<DispenserCommandSimpleResponseDto> responseMapper;
     private final ObjectMapper objectMapper;
-    private final DispenserSauceService dispenserSauceService;
     private final DispenserService dispenserService;
     private final HistoryService historyService;
 
@@ -49,7 +47,7 @@ public class MqttListener {
 
         String payload = new String(message.getPayload());
         DispenserStatusDto dispenserStatusDto = statusMapper.fromJson(payload, DispenserStatusDto.class);
-        dispenserSauceService.updateStatus(dispenserStatusDto);
+        dispenserService.updateDispenserSauces(dispenserStatusDto);
     }
     void getDispenserCommandResponse(String topic, MqttMessage message) {
         String payload = new String(message.getPayload());

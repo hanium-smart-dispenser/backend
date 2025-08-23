@@ -7,7 +7,6 @@ import com.hanium.smartdispenser.dispenser.dto.DispenserCommandResponseDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserStatusDto;
 import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
 import com.hanium.smartdispenser.dispenser.service.DispenserService;
-import com.hanium.smartdispenser.dispenser.service.DispenserSauceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,12 +19,11 @@ public class DispenserController {
 
     private final DispenserCommandFacade dispenserCommandFacade;
     private final DispenserService dispenserService;
-    private final DispenserSauceService dispenserSauceService;
 
     @GetMapping("/me")
-    public DispenserStatusDto sendDispenserInfo(@AuthenticationPrincipal UserPrincipal user) {
-        Dispenser dispenser = dispenserService.findByUser(user.getUserId());
-        return dispenserSauceService.getDispenserStatus(dispenser.getId());
+    public ResponseEntity<DispenserStatusDto> sendDispenserInfo(@AuthenticationPrincipal UserPrincipal user) {
+        Dispenser dispenser = dispenserService.findByUserIdWithSauces(user.getUserId());
+        return ResponseEntity.ok(new DispenserStatusDto(dispenser));
     }
 
     @PostMapping("/me/command")
@@ -39,7 +37,7 @@ public class DispenserController {
             return ResponseEntity.ok(responseDto);
         }
 
-        Dispenser dispenser = dispenserService.findByUser(user.getUserId());
+        Dispenser dispenser = dispenserService.findByUserId(user.getUserId());
         DispenserCommandResponseDto responseDto = dispenserCommandFacade.sendCommand(
                 dispenser.getId(), user.getUserId(), requestDto.getRecipeId());
         return ResponseEntity.ok(responseDto);

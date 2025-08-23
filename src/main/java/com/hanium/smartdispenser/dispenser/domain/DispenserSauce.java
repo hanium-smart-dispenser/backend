@@ -46,4 +46,8 @@ public class DispenserSauce {
         return ds;
     }
 
+    public void markLow(boolean isLow) {
+        this.isLow = isLow;
+    }
+
 }
