@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -29,7 +31,7 @@ class DispenserServiceTest {
     void validateDispenserStatus_throwException_whenDispenserNotReady() {
         User user = User.of("test1", "1234", "test@test.com");
         userRepository.save(user);
-        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user);
+        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user, UUID.randomUUID().toString());
         dispenserService.createDispenser(dispenser);
 
         assertThatThrownBy(() ->
@@ -67,7 +69,7 @@ class DispenserServiceTest {
         User user = User.of("test1", "1234", "test@test.com");
         userRepository.save(user);
 
-        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user);
+        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user, UUID.randomUUID().toString());
         Long dispenserId = dispenserService.createDispenser(dispenser);
 
         Dispenser findDispenser = dispenserService.findById(dispenserId);

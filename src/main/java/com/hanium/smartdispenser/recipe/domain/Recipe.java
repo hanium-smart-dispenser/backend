@@ -21,7 +21,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "recipe")
 public class Recipe extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recipe_id")
     private Long id;
     private String name;

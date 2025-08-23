@@ -19,7 +19,7 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Dispenser extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dispenser_id")
     private Long id;
 
