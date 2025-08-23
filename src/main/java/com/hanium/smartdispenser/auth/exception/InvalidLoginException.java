@@ -11,7 +11,8 @@ public class InvalidLoginException extends BusinessException {
         super(DEFAULT_MESSAGE, ERROR_CODE);
     }
 
-    public InvalidLoginException(Throwable cause) {
-        super(DEFAULT_MESSAGE, cause, ERROR_CODE);
+    public InvalidLoginException(Long userId) {
+        super(DEFAULT_MESSAGE, ERROR_CODE);
+        put("userId", userId);
     }
 }

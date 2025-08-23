@@ -56,7 +56,7 @@ public class DispenserService {
     public void validateDispenserStatus(Long dispenserId) {
         DispenserStatus status = findById(dispenserId).getStatus();
         if (status != DispenserStatus.READY) {
-            throw new DispenserNotReadyException(status);
+            throw new DispenserNotReadyException(dispenserId, status);
         }
     }
 

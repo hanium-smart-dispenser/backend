@@ -28,7 +28,7 @@ public class LoginService {
             User user = userService.findByEmail(loginRequestDto.getEmail());
 
             if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-                throw new InvalidLoginException();
+                throw new InvalidLoginException(user.getId());
             }
 
             String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getUserRole());
@@ -37,7 +37,7 @@ public class LoginService {
 
             return new LoginResponseDto(accessToken, refreshToken, user);
         } catch (UserNotFoundException e) {
-            throw new InvalidLoginException(e);
+            throw new InvalidLoginException();
         }
     }
 

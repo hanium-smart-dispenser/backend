@@ -10,6 +10,7 @@ public class UnauthorizedDispenserAccessException extends BusinessException {
     public static final String ERROR_CODE = "DISPENSER_UNAUTHORIZED";
     public UnauthorizedDispenserAccessException(Long dispenserId, Long userId) {
         super(DEFAULT_MESSAGE,ERROR_CODE);
-        log.warn("이 디스펜서에 접근 권한이 없습니다. dispenserId={}, userId={}", dispenserId, userId);
+        put("dispenserId", dispenserId);
+        put("userId", userId);
     }
 }

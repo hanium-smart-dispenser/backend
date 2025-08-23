@@ -14,19 +14,19 @@ public class DispenserNotFoundException extends BusinessException {
 
     public static DispenserNotFoundException byDispenserId(Long dispenserId) {
         DispenserNotFoundException ex = new DispenserNotFoundException();
-        log.warn("디스펜서를 찾을 수 없습니다. dispenserId={}", dispenserId);
+        ex.put("dispenserId", dispenserId);
         return ex;
     }
 
     public static DispenserNotFoundException byUserId(Long userId) {
         DispenserNotFoundException ex = new DispenserNotFoundException();
-        log.warn("디스펜서를 찾을 수 없습니다. userId={}", userId);
+        ex.put("userId", userId);
         return ex;
     }
 
     public static DispenserNotFoundException byUuid(String uuid) {
         DispenserNotFoundException ex = new DispenserNotFoundException();
-        log.warn("디스펜서를 찾을 수 없습니다. uuid={}", uuid);
+        ex.put("uuid", uuid);
         return ex;
     }
 }

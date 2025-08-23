@@ -20,7 +20,7 @@ public class DispenserController {
     private final DispenserCommandFacade dispenserCommandFacade;
     private final DispenserService dispenserService;
 
-    @GetMapping("/me")
+    @GetMapping("/me/status")
     public ResponseEntity<DispenserStatusDto> sendDispenserInfo(@AuthenticationPrincipal UserPrincipal user) {
         Dispenser dispenser = dispenserService.findByUserIdWithSauces(user.getUserId());
         return ResponseEntity.ok(new DispenserStatusDto(dispenser));
