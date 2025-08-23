@@ -1,14 +1,11 @@
 package com.hanium.smartdispenser.recipe;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hanium.smartdispenser.ai.AiService;
-import com.hanium.smartdispenser.ai.dto.AiResponse;
 import com.hanium.smartdispenser.auth.UserPrincipal;
 import com.hanium.smartdispenser.ingredient.IngredientSnapshotService;
 import com.hanium.smartdispenser.ingredient.domain.IngredientSnapshot;
-import com.hanium.smartdispenser.recipe.dto.RecipeAiResponse;
+import com.hanium.smartdispenser.recipe.dto.RecipeAiCreateDto;
 import com.hanium.smartdispenser.recipe.dto.RecipeCreateRequestDto;
-import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +35,9 @@ public class RecipeController {
     @PostMapping("/ai")
     public ResponseEntity<Void> createRecipeToAi(
             @AuthenticationPrincipal UserPrincipal user,
-            @RequestBody String prompt
+            @RequestBody RecipeAiCreateDto dto
     ) {
-        recipeAssembler.create(userService.findById(user.getUserId()), prompt);
+        recipeAssembler.create(userService.findById(user.getUserId()), dto.prompt());
         return ResponseEntity.ok().build();
     }
 

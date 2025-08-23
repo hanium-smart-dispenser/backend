@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import static com.fasterxml.jackson.databind.PropertyNamingStrategies.*;
+import static com.hanium.smartdispenser.ai.AiUtils.roundOrZero;
 
 @JsonNaming(SnakeCaseStrategy.class)
 public record LiquidAutoIngredient(
@@ -15,4 +16,8 @@ public record LiquidAutoIngredient(
         Double pumpTimeSec
 ) implements AutoIngredient {
 
+    @Override
+    public int computeGrams() {
+        return roundOrZero(targetG);
+    }
 }

@@ -1,7 +1,10 @@
 package com.hanium.smartdispenser.recipe;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanium.smartdispenser.ai.AiService;
+import com.hanium.smartdispenser.ai.dto.AiResponse;
+import com.hanium.smartdispenser.ai.dto.AutoIngredient;
 import com.hanium.smartdispenser.ingredient.IngredientService;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.ingredient.domain.IngredientSnapshot;
@@ -10,68 +13,51 @@ import com.hanium.smartdispenser.ingredient.repository.IngredientSnapshotReposit
 import com.hanium.smartdispenser.recipe.domain.Recipe;
 import com.hanium.smartdispenser.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Iterator;
 
 @Component
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class RecipeAssembler {
 
     private final AiService aiService;
     private final RecipeRepository recipeRepository;
     private final IngredientService ingredientService;
     private final IngredientSnapshotRepository ingredientSnapshotRepository;
+    private final ObjectMapper objectMapper;
 
     public JsonNode create(User user, String prompt) {
-        JsonNode payload = aiService.getRecipeRaw(prompt);
-
-        JsonNode autoArr = payload.path("auto_ingredients");
-        Recipe recipe = Recipe.of(payload.path("name").asText(), user);
+        AiResponse dto = aiService.getRecipe(prompt);
+        Recipe recipe = Recipe.of(dto.name(), user);
 
         recipeRepository.save(recipe);
 
-        if (autoArr.isArray()) {
-            for (Iterator<JsonNode> it = autoArr.elements(); it.hasNext(); ) {
-                JsonNode n = it.next();
+        if (dto.auto_ingredients() != null) {
+            for (AutoIngredient autoIng : dto.auto_ingredients()) {
+                String name = autoIng.ingredient();
+                if (name == null) {
+                    continue;
+                }
 
-                String name = n.path("ingredient").asText(null);
-                if(name == null) continue;
-
-                IngredientType type = mapType(n.path("type").asText(null));
-                Ingredient ingredient = ingredientService.findOrCreateIngredient(name, type);
-
-                int grams = computeAutoGrams(n);
-                recipe.addIngredient(ingredient, grams);
+                IngredientType type = mapType(autoIng.type());
+                Ingredient ing = ingredientService.findOrCreateIngredient(name, type);
+                int grams = autoIng.computeGrams();
+                recipe.addIngredient(ing, grams);
             }
         }
 
-        JsonNode manualArr = payload.path("manual_ingredients"); // 배열 전체
-        if (manualArr != null && !manualArr.isMissingNode()) {
-            ingredientSnapshotRepository.save(IngredientSnapshot.of(recipe, manualArr));
+        if (dto.manual_ingredients() != null && dto.manual_ingredients().isEmpty()) {
+            JsonNode jsonNode = objectMapper.valueToTree(dto.manual_ingredients());
+            ingredientSnapshotRepository.save(IngredientSnapshot.of(recipe, jsonNode));
         }
 
-        return payload;
+        return objectMapper.valueToTree(dto);
     }
 
     /** auto g 계산: liquid는 target_g, powder는 estimated_delivered_g → per_pump_g * pump_counts → target_g 순서 */
-    private int computeAutoGrams(JsonNode n) {
-        // liquid: target_g 우선
-        if ("liquid".equalsIgnoreCase(n.path("type").asText(null))) {
-            return round(n.path("target_g").asDouble(0));
-        }
-        // solid: estimated_delivered_g > per_pump_g * pump_counts > target_g
-        if (n.hasNonNull("estimated_delivered_g")) {
-            return round(n.get("estimated_delivered_g").asDouble());
-        }
-        if (n.hasNonNull("per_pump_g") && n.hasNonNull("pump_counts")) {
-            double g = n.get("per_pump_g").asDouble(0) * n.get("pump_counts").asInt(0);
-            return round(g);
-        }
-        return round(n.path("target_g").asDouble(0));
-    }
 
     private int round(double d) {
         return (int) Math.round(d);
@@ -85,10 +71,4 @@ public class RecipeAssembler {
             default -> IngredientType.POWDER;
         };
     }
-
-    private int safeRound(Double g) {
-        if (g == null) return 0;
-        return (int) round(g);
-    }
-
 }

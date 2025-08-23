@@ -14,7 +14,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.*;
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = LiquidAutoIngredient.class, name = "liquid"),
-        @JsonSubTypes.Type(value = PowderAutoIngredient.class, name = "solid")
+        @JsonSubTypes.Type(value = PowderAutoIngredient.class, name = "powder")
 })
 public sealed interface AutoIngredient permits LiquidAutoIngredient, PowderAutoIngredient {
     String type();
@@ -24,4 +24,6 @@ public sealed interface AutoIngredient permits LiquidAutoIngredient, PowderAutoI
     String pumpId();
 
     Double targetG();
+
+    int computeGrams();
 }
