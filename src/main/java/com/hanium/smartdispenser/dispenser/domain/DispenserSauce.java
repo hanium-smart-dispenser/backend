@@ -14,7 +14,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "dispenser_sauce")
 public class DispenserSauce {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dispenser_sauce_id")
     private Long id;
     private int slot;
@@ -44,6 +45,10 @@ public class DispenserSauce {
         ds.ingredient = ingredient;
         ds.slot = slot;
         return ds;
+    }
+
+    public void markLow(boolean isLow) {
+        this.isLow = isLow;
     }
 
 }

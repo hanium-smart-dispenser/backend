@@ -14,7 +14,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "recipe_ingredient")
 public class RecipeIngredient {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recipe_ingredient_id")
     private Long id;
     private int amount;

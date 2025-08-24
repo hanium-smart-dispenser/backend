@@ -19,7 +19,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "history")
 public class History {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "history_id")
     private Long id;
 

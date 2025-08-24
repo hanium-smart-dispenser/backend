@@ -10,8 +10,4 @@ public class PasswordMismatchException extends BusinessException {
     public PasswordMismatchException() {
         super(DEFAULT_MESSAGE, ERROR_CODE);
     }
-
-    public PasswordMismatchException(Throwable cause){
-        super(DEFAULT_MESSAGE, cause, ERROR_CODE);
-    }
 }

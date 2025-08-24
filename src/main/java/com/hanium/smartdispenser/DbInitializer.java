@@ -1,18 +1,22 @@
 package com.hanium.smartdispenser;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanium.smartdispenser.dispenser.domain.DispenserSauce;
 import com.hanium.smartdispenser.dispenser.repository.DispenserRepository;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.domain.DispenserStatus;
-import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
+import com.hanium.smartdispenser.favorite.Favorite;
+import com.hanium.smartdispenser.favorite.FavoriteRepository;
 import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.repository.HistoryRepository;
+import com.hanium.smartdispenser.ingredient.domain.IngredientSnapshot;
 import com.hanium.smartdispenser.ingredient.repository.IngredientRepository;
 import com.hanium.smartdispenser.ingredient.domain.Ingredient;
 import com.hanium.smartdispenser.ingredient.domain.IngredientType;
-import com.hanium.smartdispenser.recipe.RecipeService;
+import com.hanium.smartdispenser.ingredient.repository.IngredientSnapshotRepository;
+import com.hanium.smartdispenser.recipe.RecipeRepository;
 import com.hanium.smartdispenser.recipe.domain.Recipe;
-import com.hanium.smartdispenser.recipe.dto.IngredientWithAmountDto;
 import com.hanium.smartdispenser.user.domain.User;
 import com.hanium.smartdispenser.user.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +24,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -33,61 +36,159 @@ public class DbInitializer implements ApplicationRunner {
     private final DispenserRepository dispenserRepository;
     private final UserRepository userRepository;
     private final IngredientRepository ingredientRepository;
-    private final RecipeService recipeService;
-    private final PasswordEncoder passwordEncoder;
-    private final DispenserCommandFacade dispenserCommandFacade;
+    private final RecipeRepository recipeRepository;
     private final HistoryRepository historyRepository;
+    private final FavoriteRepository favoriteRepository;
+    private final IngredientSnapshotRepository ingredientSnapshotRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ObjectMapper objectMapper;
 
     @Override
+    @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        User testUser1 = User.of(passwordEncoder.encode("1234"), "aaa@aaa.com", UUID.randomUUID().toString());
-        User testUser2 = User.of(passwordEncoder.encode("1234"), "bbb@bbb.com", UUID.randomUUID().toString());
-        User testUser3 = User.of(passwordEncoder.encode("1234"), "ccc@ccc.com", UUID.randomUUID().toString());
-        testUser1.convertGuestToUser();
-        testUser2.convertGuestToUser();
-        testUser3.convertGuestToUser();
 
-        userRepository.save(testUser1);
-        userRepository.save(testUser2);
-        userRepository.save(testUser3);
+        // 유저 저장
+        User user1 = User.of(passwordEncoder.encode("1234"), "aaa@aaa.com", UUID.randomUUID().toString());
+        User user2 = User.of(passwordEncoder.encode("1234"), "bbb@bbb.com", UUID.randomUUID().toString());
+        User user3 = User.of(passwordEncoder.encode("1234"), "ccc@ccc.com", UUID.randomUUID().toString());
 
-        Dispenser dispenser1 = dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser1, UUID.randomUUID().toString()));
-        dispenserRepository.save(Dispenser.of(DispenserStatus.READY, testUser2, UUID.randomUUID().toString()));
+        user1.convertGuestToUser();
+        user2.convertGuestToUser();
+        user3.convertGuestToUser();
 
-        Ingredient redPepperPowder = ingredientRepository.save(Ingredient.of("고춧가루", IngredientType.POWDER));
-        Ingredient sugar = ingredientRepository.save(Ingredient.of("설탕", IngredientType.POWDER));
-        Ingredient soySauce = ingredientRepository.save(Ingredient.of("간장", IngredientType.LIQUID));
-        Ingredient pepper = ingredientRepository.save(Ingredient.of("후추", IngredientType.POWDER));
-        Ingredient dasida = ingredientRepository.save(Ingredient.of("다시다", IngredientType.POWDER));
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
 
-        List<IngredientWithAmountDto> ingredients1 = new ArrayList<>();
-        ingredients1.add(new IngredientWithAmountDto(1L, 1, IngredientType.POWDER));
-        ingredients1.add(new IngredientWithAmountDto(2L, 2, IngredientType.POWDER));
+        // 재료 저장
+        Ingredient soy = Ingredient.of("간장", IngredientType.LIQUID);
+        Ingredient allulose = Ingredient.of("알룰로스", IngredientType.LIQUID);
+        Ingredient dashida = Ingredient.of("다시다", IngredientType.POWDER);
+        Ingredient redPepper = Ingredient.of("고춧가루", IngredientType.POWDER);
+        Ingredient gochujang = Ingredient.of("고추장 분말", IngredientType.POWDER);
 
-        List<IngredientWithAmountDto> ingredients2 = new ArrayList<>();
-        ingredients2.add(new IngredientWithAmountDto(1L, 1, IngredientType.LIQUID));
-        ingredients2.add(new IngredientWithAmountDto(2L, 2, IngredientType.LIQUID));
+        ingredientRepository.save(soy);
+        ingredientRepository.save(allulose);
+        ingredientRepository.save(dashida);
+        ingredientRepository.save(redPepper);
+        ingredientRepository.save(gochujang);
 
-        Recipe testRecipe1 = recipeService.createRecipe(testUser1.getId(), "testRecipe1", ingredients1);
-        Recipe testRecipe2 = recipeService.createRecipe(testUser2.getId(), "testRecipe2", ingredients2);
+        // 디스펜서 저장
+        Dispenser d1 = Dispenser.of(DispenserStatus.READY, user1, UUID.randomUUID().toString());
+        Dispenser d2 = Dispenser.of(DispenserStatus.READY, user1, UUID.randomUUID().toString());
+        Dispenser d3 = Dispenser.of(DispenserStatus.READY, user1, UUID.randomUUID().toString());
 
-        dispenser1.addSauce(DispenserSauce.of(1, redPepperPowder));
-        dispenser1.addSauce(DispenserSauce.of(2, sugar));
-        dispenser1.addSauce(DispenserSauce.of(3, soySauce));
-        dispenser1.addSauce(DispenserSauce.of(4, pepper));
-        dispenser1.addSauce(DispenserSauce.of(5, dasida));
+        dispenserRepository.save(d1);
+        dispenserRepository.save(d2);
+        dispenserRepository.save(d3);
 
-        //더티 체킹 안되는이유 -> 트랙잭션 끝남
-        dispenserRepository.save(dispenser1);
+        d1.assignUser(user1);
+        d1.addSauce(DispenserSauce.of(1, soy));
+        d1.addSauce(DispenserSauce.of(2, allulose));
+        d1.addSauce(DispenserSauce.of(3, dashida));
+        d1.addSauce(DispenserSauce.of(4, redPepper));
+        d1.addSauce(DispenserSauce.of(5, gochujang));
 
-        dispenserCommandFacade.sendCommand(1L, 1L, 1L);
+        // 레시피 저장
+        Recipe recipe1 = Recipe.of("testRecipe1", user1);
+        recipe1.addIngredient(soy, 10);
+        recipe1.addIngredient(allulose, 12);
+        recipe1.addIngredient(dashida, 15);
+        recipe1.addIngredient(redPepper, 10);
+        recipe1.addIngredient(gochujang, 6);
 
-        History history1 = History.of(testUser1, dispenser1, testRecipe2, LocalDateTime.now());
-        history1.markSuccess();
-        historyRepository.save(history1);
-        History history2 = History.of(testUser1, dispenser1, testRecipe1, LocalDateTime.now());
-        history2.markSuccess();
-        historyRepository.save(history2);
+        Recipe recipe2 = Recipe.of("testRecipe2", user1);
+        recipe2.addIngredient(soy, 8);
+        recipe2.addIngredient(allulose, 14);
+        recipe2.addIngredient(dashida, 20);
+        recipe2.addIngredient(redPepper, 12);
+        recipe2.addIngredient(gochujang, 7);
+
+        Recipe recipe3 = Recipe.of("testRecipe3", user1);
+        recipe3.addIngredient(soy, 15);
+        recipe3.addIngredient(allulose, 10);
+        recipe3.addIngredient(dashida, 18);
+        recipe3.addIngredient(redPepper, 9);
+        recipe3.addIngredient(gochujang, 5);
+
+        Recipe recipe4 = Recipe.of("testRecipe4", user1);
+        recipe4.addIngredient(soy, 12);
+        recipe4.addIngredient(allulose, 16);
+        recipe4.addIngredient(dashida, 22);
+        recipe4.addIngredient(redPepper, 11);
+        recipe4.addIngredient(gochujang, 8);
+
+        Recipe recipe5 = Recipe.of("testRecipe5", user1);
+        recipe5.addIngredient(soy, 9);
+        recipe5.addIngredient(allulose, 13);
+        recipe5.addIngredient(dashida, 17);
+        recipe5.addIngredient(redPepper, 14);
+        recipe5.addIngredient(gochujang, 6);
+
+        recipeRepository.save(recipe1);
+        recipeRepository.save(recipe2);
+        recipeRepository.save(recipe3);
+        recipeRepository.save(recipe4);
+        recipeRepository.save(recipe5);
+
+        // 과거 이력 저장
+        historyRepository.save(History.of(user1, d1, recipe1, LocalDateTime.now()));
+        historyRepository.save(History.of(user1, d1, recipe2, LocalDateTime.now()));
+        historyRepository.save(History.of(user1, d1, recipe3, LocalDateTime.now()));
+        historyRepository.save(History.of(user1, d1, recipe4, LocalDateTime.now()));
+        historyRepository.save(History.of(user1, d1, recipe5, LocalDateTime.now()));
+
+        // 즐겨 찾기 저장
+        favoriteRepository.save(Favorite.of(user1, recipe1));
+        favoriteRepository.save(Favorite.of(user1, recipe3));
+        favoriteRepository.save(Favorite.of(user1, recipe5));
+
+
+        // 메뉴얼 재료 저장
+        JsonNode manual1 = objectMapper.readTree("""
+                    {
+                      "manual_ingredients": [
+                        { "amount": "10g", "ingredient": "마늘", "manual": true, "type": "manual" }
+                      ]
+                    }
+                """);
+        ingredientSnapshotRepository.save(IngredientSnapshot.of(recipe1, manual1));
+        JsonNode manual2 = objectMapper.readTree("""
+                    {
+                      "manual_ingredients": [
+                        { "amount": "20g", "ingredient": "양파", "manual": true, "type": "manual" }
+                      ]
+                    }
+                """);
+        ingredientSnapshotRepository.save(IngredientSnapshot.of(recipe2, manual2));
+        JsonNode manual3 = objectMapper.readTree("""
+                    {
+                      "manual_ingredients": [
+                        { "amount": "5g", "ingredient": "파", "manual": true, "type": "manual" }
+                      ]
+                    }
+                """);
+        ingredientSnapshotRepository.save(IngredientSnapshot.of(recipe3, manual3));
+
+        JsonNode manual4 = objectMapper.readTree("""
+                    {
+                      "manual_ingredients": [
+                        { "amount": "15g", "ingredient": "생강", "manual": true, "type": "manual" }
+                      ]
+                    }
+                """);
+        ingredientSnapshotRepository.save(IngredientSnapshot.of(recipe4, manual4));
+
+        JsonNode manual5 = objectMapper.readTree("""
+                    {
+                      "manual_ingredients": [
+                        { "amount": "30ml", "ingredient": "물", "manual": true, "type": "manual" }
+                      ]
+                    }
+                """);
+        ingredientSnapshotRepository.save(IngredientSnapshot.of(recipe5, manual5));
+
+
 
     }
 }

@@ -19,7 +19,7 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Dispenser extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dispenser_id")
     private Long id;
 
@@ -33,14 +33,14 @@ public class Dispenser extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "dispenser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DispenserSauce> dispenserSauceList = new ArrayList<>();
+    private List<DispenserSauce> dispenserSauces = new ArrayList<>();
 
 
     /**
      * Dispenser에 DispenserSauce를 등록하고 양방향 연관관계 설정합니다.
      */
     public void addSauce(DispenserSauce dispenserSauce) {
-        dispenserSauceList.add(dispenserSauce);
+        dispenserSauces.add(dispenserSauce);
         dispenserSauce.assignDispenser(this);
     }
 
@@ -50,6 +50,12 @@ public class Dispenser extends BaseEntity {
         dispenser.user = user;
         dispenser.uuid = uuid;
         return dispenser;
+    }
+
+    public void updateSauces(int slot, boolean isLow) {
+        DispenserSauce ds = dispenserSauces.stream().filter(s -> s.getSlot() == slot)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("해당 슬롯이 없습니다." + slot));
+        ds.markLow(isLow);
     }
 
     public void updateStatus(DispenserStatus status) {

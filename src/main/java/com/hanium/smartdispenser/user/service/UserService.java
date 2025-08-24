@@ -39,7 +39,7 @@ public class UserService {
             user.convertGuestToUser();
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateEmailException(e, user.getEmail());
+            throw new DuplicateEmailException(user.getEmail());
         }
     }
 

@@ -22,7 +22,7 @@ public class MqttService {
             try {
                 mqttClient.reconnect();
             } catch (MqttException e) {
-                throw new DispenserCommandSendFailedException(e);
+                throw new DispenserCommandSendFailedException(dispenserId, payload);
             }
         }
 
@@ -33,7 +33,7 @@ public class MqttService {
         try {
             mqttClient.publish(topic, message);
         } catch (MqttException e) {
-            throw new DispenserCommandSendFailedException(e);
+            throw new DispenserCommandSendFailedException(dispenserId, payload);
         }
     }
 }

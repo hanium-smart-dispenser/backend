@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Favorite extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

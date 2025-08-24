@@ -18,23 +18,12 @@ import java.util.List;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
-    private final UserService userService;
-    private final IngredientService ingredientService;
-
-    public Recipe createRecipe(Long userId, String recipeName, List<IngredientWithAmountDto> recipeIngredients) {
-        User user = userService.findById(userId);
-        Recipe recipe = Recipe.of(recipeName, user);
-
-        for (IngredientWithAmountDto recipeIngredient : recipeIngredients) {
-            Ingredient ingredient = ingredientService.findById(recipeIngredient.getIngredientId());
-            recipe.addIngredient(ingredient, recipeIngredient.getAmount());
-        }
-
-        return recipeRepository.save(recipe);
-    }
 
     public Recipe findById(Long recipeId) {
         return recipeRepository.findById(recipeId).orElseThrow(() -> new RecipeNotFoundException(recipeId));
     }
 
+    public Recipe findByIdWithIngredients(Long recipeId) {
+        return recipeRepository.findByIdWithIngredients(recipeId).orElseThrow(() -> new RecipeNotFoundException(recipeId));
+    }
 }
