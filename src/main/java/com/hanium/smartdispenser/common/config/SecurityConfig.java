@@ -36,9 +36,14 @@ public class SecurityConfig {
                         .accessDeniedHandler(securityExceptionHandler))
                 // 여기서 logout 은 session 제거 + SecurityContextHolder.clearContext
                 .logout(AbstractHttpConfigurer::disable)
-                //경로 재설정 해야됨
                 .authorizeHttpRequests(
-                        (authorize) -> authorize.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated()
+                        (authorize) -> authorize.requestMatchers(
+                                "/api/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/v3/api/docs")
+                                .permitAll()
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
