@@ -15,7 +15,8 @@ import org.hibernate.annotations.Type;
 @Table(name = "ingredient_snapshot")
 public class IngredientSnapshot {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_snapshot_id")
     private Long id;
 
