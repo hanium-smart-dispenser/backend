@@ -14,7 +14,7 @@ public class MqttConfig {
 
     @Bean
     public MqttClient mqttClient() throws MqttException {
-        String brokerUrl = "tcp://mosquitto:1883";
+        String brokerUrl = "tcp://localhost:1883";
         String clientId = "spring-client-" + UUID.randomUUID();
 
         MqttClient client = new MqttClient(brokerUrl, clientId, new MemoryPersistence());

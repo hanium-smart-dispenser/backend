@@ -287,4 +287,4 @@ def home():
 # =====================[ 실행 ]=====================
 if __name__ == '__main__':
     # 외부에서 접근해야 하면 host='0.0.0.0' 지정
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

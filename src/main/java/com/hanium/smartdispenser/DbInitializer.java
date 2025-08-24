@@ -75,8 +75,8 @@ public class DbInitializer implements ApplicationRunner {
 
         // 디스펜서 저장
         Dispenser d1 = Dispenser.of(DispenserStatus.READY, user1, UUID.randomUUID().toString());
-        Dispenser d2 = Dispenser.of(DispenserStatus.READY, user1, UUID.randomUUID().toString());
-        Dispenser d3 = Dispenser.of(DispenserStatus.READY, user1, UUID.randomUUID().toString());
+        Dispenser d2 = Dispenser.of(DispenserStatus.READY, user2, UUID.randomUUID().toString());
+        Dispenser d3 = Dispenser.of(DispenserStatus.READY, user3, UUID.randomUUID().toString());
 
         dispenserRepository.save(d1);
         dispenserRepository.save(d2);

@@ -23,7 +23,7 @@ public class AiService {
     private final ObjectMapper objectMapper;
 
     public AiResponse getRecipe(String prompt) {
-        String url = "http://host.docker.internal:5000/get-recipe";
+        String url = "http://localhost:5050/get-recipe";
 
 
         HttpHeaders headers = new HttpHeaders();
