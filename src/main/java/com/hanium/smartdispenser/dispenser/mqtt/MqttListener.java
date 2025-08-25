@@ -68,11 +68,11 @@ public class MqttListener {
 
         try {
             DispenserRegisterRequestDto requestDto = objectMapper.readValue(payload, DispenserRegisterRequestDto.class);
-            Dispenser dispenser = dispenserService.findByUuid(requestDto.getUuid());
+            Dispenser dispenser = dispenserService.findByUuid(requestDto.uuid());
             if (dispenser != null) {
                 // 이미 등록된 디스펜서라고 응답 반환
             } else {
-                dispenserService.createDispenser(Dispenser.of(DispenserStatus.READY, null, requestDto.getUuid()));
+                dispenserService.createDispenser(Dispenser.of(DispenserStatus.READY, null, requestDto.uuid()));
             }
         } catch (JsonProcessingException e) {
             throw new JsonParseException(e);

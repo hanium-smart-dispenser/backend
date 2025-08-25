@@ -4,6 +4,7 @@ import com.hanium.smartdispenser.auth.UserPrincipal;
 import com.hanium.smartdispenser.dispenser.domain.Dispenser;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandRequestDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserCommandResponseDto;
+import com.hanium.smartdispenser.dispenser.dto.DispenserRegisterRequestDto;
 import com.hanium.smartdispenser.dispenser.dto.DispenserStatusDto;
 import com.hanium.smartdispenser.dispenser.service.DispenserCommandFacade;
 import com.hanium.smartdispenser.dispenser.service.DispenserService;
@@ -41,6 +42,15 @@ public class DispenserController {
         DispenserCommandResponseDto responseDto = dispenserCommandFacade.sendCommand(
                 dispenser.getId(), user.getUserId(), requestDto.getRecipeId());
         return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<Void> assignUser(
+            @AuthenticationPrincipal UserPrincipal user,
+            @RequestBody DispenserRegisterRequestDto requestDto
+    ) {
+        dispenserService.assignUser(user.getUserId(), requestDto.uuid());
+        return ResponseEntity.ok().build();
     }
 
 }

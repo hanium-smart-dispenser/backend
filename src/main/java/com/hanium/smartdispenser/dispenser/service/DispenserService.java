@@ -75,8 +75,8 @@ public class DispenserService {
     }
 
 
-    public void assignUser(Long userId, Long dispenserId) {
-        Dispenser dispenser = findById(dispenserId);
+    public void assignUser(Long userId, String dispenserUuid) {
+        Dispenser dispenser = findByUuid(dispenserUuid);
         dispenser.assignUser(userService.findById(userId));
     }
 
