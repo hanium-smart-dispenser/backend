@@ -20,8 +20,8 @@ public class FavoriteController {
     @PostMapping("/me")
     public ResponseEntity<Void> addFavoriteRecipe(
             @AuthenticationPrincipal UserPrincipal user,
-            @RequestBody FavoriteRequestDto requestDto) {
-        favoriteService.addFavoriteRecipe(user.getUserId(), requestDto.getRecipeId());
+            @RequestBody FavoriteDto dto) {
+        favoriteService.addFavoriteRecipe(user.getUserId(), dto.getRecipeId());
         return ResponseEntity.ok().build();
     }
 
@@ -32,4 +32,12 @@ public class FavoriteController {
         return favoriteService.getFavoriteRecipes(user.getUserId(), pageable).map(f -> new RecipeDto(f.getRecipe()));
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteFavoriteRecipe(
+            @AuthenticationPrincipal UserPrincipal user,
+            @RequestBody FavoriteDto dto
+    ) {
+        favoriteService.deleteFavoriteRecipe(user.getUserId(), dto.getRecipeId());
+        return ResponseEntity.ok().build();
+    }
 }

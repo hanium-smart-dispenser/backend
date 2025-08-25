@@ -27,7 +27,17 @@ public class FavoriteService {
 
     public Page<Favorite> getFavoriteRecipes(Long userId, Pageable pageable) {
         User user = userService.findById(userId);
-        return favoriteRepository.findByUser_Id(user.getId(), pageable);
+        return favoriteRepository.findAllByUser_Id(user.getId(), pageable);
+    }
+
+    public void deleteFavoriteRecipe(Long userId, Long recipeId) {
+        User user = userService.findById(userId);
+        Recipe recipe = recipeService.findById(recipeId);
+
+        Favorite favorite = favoriteRepository.findByUser_IdAndRecipe_Id(userId, recipeId)
+                .orElseThrow(() -> new FavoriteNotFoundException(userId, recipeId));
+
+        favoriteRepository.delete(favorite);
     }
 
 

@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class FavoriteRequestDto {
+public class FavoriteDto {
 
     private final Long recipeId;
 
     @JsonCreator
-    public FavoriteRequestDto(@JsonProperty("recipeId") Long recipeId) {
+    public FavoriteDto(@JsonProperty("recipeId") Long recipeId) {
         this.recipeId = recipeId;
     }
 }
