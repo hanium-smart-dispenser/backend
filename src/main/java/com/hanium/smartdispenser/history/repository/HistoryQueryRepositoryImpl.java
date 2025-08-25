@@ -1,6 +1,5 @@
 package com.hanium.smartdispenser.history.repository;
 
-import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.dto.HistoryDto;
 import com.hanium.smartdispenser.history.dto.HistoryResponseDto;
 import com.hanium.smartdispenser.ingredient.IngredientName;
@@ -10,7 +9,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.LinkedHashMap;
@@ -28,7 +26,7 @@ import static com.hanium.smartdispenser.recipe.domain.QRecipeIngredient.recipeIn
 
 @Repository
 public class HistoryQueryRepositoryImpl implements HistoryQueryRepository {
-    public static record IngredientRow(Long historyId, String ingredientName) {}
+    public record IngredientRow(Long historyId, String ingredientName) {}
 
     private final JPAQueryFactory query;
 
@@ -59,17 +57,16 @@ public class HistoryQueryRepositoryImpl implements HistoryQueryRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.select(history.id.count())
+        long total = Optional.ofNullable(query.select(history.id.count())
                 .from(history)
                 .where(history.user.id.eq(userId))
-                .fetchOne();
+                .fetchOne()).orElse(0L);
 
         if (rows.isEmpty()) {
             return new PageImpl<>(List.of(), pageable, total);
         }
 
         List<Long> historyIds = rows.stream().map(HistoryResponseDto::getHistoryId).toList();
-
 
 
         List<IngredientRow> ingRows = query.select(Projections.constructor(IngredientRow.class, history.id, ingredient.name))
@@ -87,7 +84,6 @@ public class HistoryQueryRepositoryImpl implements HistoryQueryRepository {
                         Collectors.mapping(rw -> new IngredientName(rw.ingredientName()), Collectors.toList())
                 ));
 
-        // 3) Assemble final DTOs
         List<HistoryDto> content = rows.stream()
                 .map(rw -> new HistoryDto(
                         rw.getHistoryId(),
@@ -103,39 +99,5 @@ public class HistoryQueryRepositoryImpl implements HistoryQueryRepository {
                 )).toList();
 
         return new PageImpl<>(content, pageable, total);
-
-
-//        List<History> histories = query.select(history)
-//                .from(history)
-//                .where(history.user.id.eq(userId))
-//                .limit(pageable.getPageSize())
-//                .offset(pageable.getOffset())
-//                .fetch();
-
-//        return PageableExecutionUtils.getPage(histories, pageable,
-//                () -> Optional.ofNullable(
-//                        query.select(history.count())
-//                                .from(history)
-//                                .where(history.user.id.eq(userId))
-//                                .fetchOne()).orElse(0L));
     }
-
-    @Override
-    public Page<History> findAllByUserIdAndDispenserIdWithPaging(Long userId, Long dispenserId, Pageable pageable) {
-        List<History> histories = query.select(history)
-                .from(history)
-                .where(history.user.id.eq(userId).and(history.dispenser.id.eq(dispenserId)))
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
-
-        return PageableExecutionUtils.getPage(histories, pageable,
-                () -> Optional.ofNullable(
-                        query.select(history.count())
-                                .from(history)
-                                .where(history.user.id.eq(userId).and(history.dispenser.id.eq(dispenserId)))
-                                .fetchOne()).orElse(0L));
-    }
-
-
 }

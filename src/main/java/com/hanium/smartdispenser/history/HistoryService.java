@@ -25,10 +25,6 @@ public class HistoryService {
         return historyRepository.findAllByUserIdWithPaging(userId, pageable);
     }
 
-    public Page<History> getHistoriesByUserAndDispenser(Long userId, Long dispenserId, Pageable pageable) {
-        return historyRepository.findAllByUserIdAndDispenserIdWithPaging(userId, dispenserId, pageable);
-    }
-
     public History findById(Long historyId) {
         return historyRepository.findById(historyId).orElseThrow(() -> new HistoryNotFound(historyId));
     }
