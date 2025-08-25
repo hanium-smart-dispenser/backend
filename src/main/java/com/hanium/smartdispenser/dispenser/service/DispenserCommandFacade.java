@@ -38,7 +38,7 @@ public class DispenserCommandFacade {
     private final DispenserService dispenserService;
     private final UserService userService;
     private final MqttService mqttService;
-    private final JsonMapper<DispenserCommandPayLoadDto> mapper;
+    private final JsonMapper mapper;
 
     public DispenserCommandResponseDto simpleSendCommand(Long dispenserId, Long recipeId) {
         LocalDateTime start = LocalDateTime.now();

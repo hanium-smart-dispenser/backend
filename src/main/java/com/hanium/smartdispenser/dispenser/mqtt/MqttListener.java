@@ -30,9 +30,7 @@ public class MqttListener {
     private final MqttClient mqttClient;
 
     //jsonMapper 삭제해야됨
-    private final JsonMapper<DispenserStatusDto> statusMapper;
-    private final JsonMapper<DispenserCommandSimpleResponseDto> responseMapper;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper mapper;
     private final DispenserService dispenserService;
     private final HistoryService historyService;
 
@@ -46,12 +44,13 @@ public class MqttListener {
     void getDispenserStatus(String topic, MqttMessage message) {
 
         String payload = new String(message.getPayload());
-        DispenserStatusDto dispenserStatusDto = statusMapper.fromJson(payload, DispenserStatusDto.class);
+        DispenserStatusDto dispenserStatusDto = mapper.fromJson(payload, DispenserStatusDto.class);
         dispenserService.updateDispenserSauces(dispenserStatusDto);
     }
+
     void getDispenserCommandResponse(String topic, MqttMessage message) {
         String payload = new String(message.getPayload());
-        DispenserCommandSimpleResponseDto responseDto = responseMapper.fromJson(payload, DispenserCommandSimpleResponseDto.class);
+        DispenserCommandSimpleResponseDto responseDto = mapper.fromJson(payload, DispenserCommandSimpleResponseDto.class);
         HistoryStatus status = responseDto.getStatus();
 
         if (status == HistoryStatus.SUCCESS) {
@@ -66,17 +65,12 @@ public class MqttListener {
     void register(String topic, MqttMessage message) {
         String payload = new String(message.getPayload());
 
-        try {
-            DispenserRegisterRequestDto requestDto = objectMapper.readValue(payload, DispenserRegisterRequestDto.class);
-            Dispenser dispenser = dispenserService.findByUuid(requestDto.uuid());
-            if (dispenser != null) {
-                // 이미 등록된 디스펜서라고 응답 반환
-            } else {
-                dispenserService.createDispenser(Dispenser.of(DispenserStatus.READY, null, requestDto.uuid()));
-            }
-        } catch (JsonProcessingException e) {
-            throw new JsonParseException(e);
+        DispenserRegisterRequestDto requestDto = mapper.fromJson(payload, DispenserRegisterRequestDto.class);
+        Dispenser dispenser = dispenserService.findByUuid(requestDto.uuid());
+        if (dispenser != null) {
+            // 이미 등록된 디스펜서라고 응답 반환
+        } else {
+            dispenserService.createDispenser(Dispenser.of(DispenserStatus.READY, null, requestDto.uuid()));
         }
-
     }
 }

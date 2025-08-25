@@ -8,19 +8,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JsonMapper<T> {
+public class JsonMapper {
 
     private final ObjectMapper objectMapper;
 
-    public String toJson(T object) {
+    public String toJson(Object value) {
         try {
-            return objectMapper.writeValueAsString(object);
+            return objectMapper.writeValueAsString(value);
         } catch (JsonProcessingException e) {
             throw new JsonParseException(e);
         }
     }
 
-    public T fromJson(String json, Class<T> type) {
+    public <T> T fromJson(String json, Class<T> type) {
         try {
             return objectMapper.readValue(json, type);
         } catch (JsonProcessingException e) {
