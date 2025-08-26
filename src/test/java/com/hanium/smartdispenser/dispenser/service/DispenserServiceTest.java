@@ -29,9 +29,7 @@ class DispenserServiceTest {
     @Test
     @DisplayName("디스펜서가 준비되지 않으면 예외를 반환한다.")
     void validateDispenserStatus_throwException_whenDispenserNotReady() {
-        User user = User.of("test1", "1234", "test@test.com");
-        userRepository.save(user);
-        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user, UUID.randomUUID().toString());
+        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, null, UUID.randomUUID().toString());
         dispenserService.createDispenser(dispenser);
 
         assertThatThrownBy(() ->
@@ -65,11 +63,8 @@ class DispenserServiceTest {
 
     @Test
     @DisplayName("Dispenser를 생성하고 Id로 조회 할 수 있다.")
-    void findByEmail_returnUser_whenUserExist() {
-        User user = User.of("test1", "1234", "test@test.com");
-        userRepository.save(user);
-
-        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, user, UUID.randomUUID().toString());
+    void findById_returnDispenser_whenDispenserExist() {
+        Dispenser dispenser = Dispenser.of(DispenserStatus.CONNECTED, null, UUID.randomUUID().toString());
         Long dispenserId = dispenserService.createDispenser(dispenser);
 
         Dispenser findDispenser = dispenserService.findById(dispenserId);
