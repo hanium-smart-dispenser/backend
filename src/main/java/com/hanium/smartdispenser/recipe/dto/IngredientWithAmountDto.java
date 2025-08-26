@@ -1,28 +1,21 @@
 package com.hanium.smartdispenser.recipe.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hanium.smartdispenser.ingredient.domain.IngredientType;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
+import com.hanium.smartdispenser.recipe.domain.Recipe;
 
-@Getter
-public class IngredientWithAmountDto {
+import java.util.List;
 
-    @NotNull
-    private final Long ingredientId;
+public record IngredientWithAmountDto (
+        Long ingredientId,
+        IngredientType type,
+        int amount
+) {
 
-    private final int amount;
-    private final IngredientType type;
-
-    @JsonCreator
-    public IngredientWithAmountDto(
-            @JsonProperty("ingredientId") Long ingredientId,
-            @JsonProperty("amount") int amount,
-            @JsonProperty("type") IngredientType type) {
-        this.ingredientId = ingredientId;
-        this.amount = amount;
-        this.type = type;
+    public static List<IngredientWithAmountDto> getListToRecipe(Recipe recipe) {
+        return recipe.getRecipeIngredientList().stream().map(
+                rc -> new IngredientWithAmountDto(
+                        rc.getIngredient().getId(), rc.getIngredient().getType(), rc.getAmount())
+        ).toList();
     }
 
 }

@@ -10,7 +10,6 @@ import com.hanium.smartdispenser.dispenser.mqtt.MqttService;
 import com.hanium.smartdispenser.history.HistoryService;
 import com.hanium.smartdispenser.history.domain.History;
 import com.hanium.smartdispenser.history.domain.HistoryStatus;
-import com.hanium.smartdispenser.recipe.RecipeParsingFacade;
 import com.hanium.smartdispenser.recipe.RecipeService;
 import com.hanium.smartdispenser.recipe.domain.Recipe;
 import com.hanium.smartdispenser.recipe.dto.IngredientWithAmountDto;
@@ -32,8 +31,6 @@ import java.util.UUID;
 public class DispenserCommandFacade {
 
     private final HistoryService historyService;
-    private final RecipeParsingFacade recipeParsingFacade;
-    //나중에 수정
     private final RecipeService recipeService;
     private final DispenserService dispenserService;
     private final UserService userService;
@@ -43,9 +40,9 @@ public class DispenserCommandFacade {
     public DispenserCommandResponseDto simpleSendCommand(Long dispenserId, Long recipeId) {
         LocalDateTime start = LocalDateTime.now();
         Dispenser dispenser = dispenserService.findById(dispenserId);
-        Recipe recipe = recipeService.findById(recipeId);
 
-        List<IngredientWithAmountDto> ingredients = recipeParsingFacade.getIngredientsList(recipeId);
+        Recipe recipe = recipeService.findByIdWithIngredients(recipeId);
+        List<IngredientWithAmountDto> ingredients = IngredientWithAmountDto.getListToRecipe(recipe);
 
         dispenserService.validateDispenserStatus(dispenserId);
 
@@ -66,11 +63,13 @@ public class DispenserCommandFacade {
         User user = userService.findById(userId);
         Recipe recipe = recipeService.findById(recipeId);
 
-        List<IngredientWithAmountDto> ingredients = recipeParsingFacade.getIngredientsList(recipeId);
+        List<IngredientWithAmountDto> ingredients = IngredientWithAmountDto.getListToRecipe(recipe);
+
         dispenserService.validateUserAccess(userId, dispenserId);
         dispenserService.validateDispenserStatus(dispenserId);
 
         String commandId = UUID.randomUUID().toString();
+
         //이력 저장
         History history = History.of(user, dispenser, recipe, LocalDateTime.now());
         historyService.saveHistory(history);
