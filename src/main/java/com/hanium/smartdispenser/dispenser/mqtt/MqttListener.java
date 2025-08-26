@@ -51,14 +51,14 @@ public class MqttListener {
     void getDispenserCommandResponse(String topic, MqttMessage message) {
         String payload = new String(message.getPayload());
         DispenserCommandSimpleResponseDto responseDto = mapper.fromJson(payload, DispenserCommandSimpleResponseDto.class);
-        HistoryStatus status = responseDto.getStatus();
+        HistoryStatus status = responseDto.status();
 
         if (status == HistoryStatus.SUCCESS) {
-            historyService.updateHistoryStatus(responseDto.getHistoryId(), HistoryStatus.SUCCESS);
-            dispenserService.updateDispenserStatus(responseDto.getDispenserId(), DispenserStatus.READY);
+            historyService.updateHistoryStatus(responseDto.historyId(), HistoryStatus.SUCCESS);
+            dispenserService.updateDispenserStatus(responseDto.dispenserId(), DispenserStatus.READY);
         } else {
-            historyService.updateHistoryStatus(responseDto.getHistoryId(), HistoryStatus.FAIL);
-            dispenserService.updateDispenserStatus(responseDto.getDispenserId(), DispenserStatus.ERROR);
+            historyService.updateHistoryStatus(responseDto.historyId(), HistoryStatus.FAIL);
+            dispenserService.updateDispenserStatus(responseDto.dispenserId(), DispenserStatus.ERROR);
         }
     }
 
