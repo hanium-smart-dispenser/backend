@@ -1,17 +1,15 @@
 package com.hanium.smartdispenser.auth.dto;
 
 import com.hanium.smartdispenser.user.domain.User;
-import lombok.Getter;
 
-@Getter
-public class SignUpResponseDto {
-    private final Long userId;
-    private final String email;
-    private final String createdAt;
+import java.time.LocalDateTime;
 
+public record SignUpResponseDto (
+        Long userId,
+        String email,
+        LocalDateTime createdAt
+) {
     public SignUpResponseDto(User user) {
-        this.userId = user.getId();
-        this.email = user.getEmail();
-        this.createdAt = String.valueOf(user.getCreatedAt());
+        this(user.getId(), user.getEmail(), user.getCreatedAt());
     }
 }

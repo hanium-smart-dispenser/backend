@@ -34,18 +34,18 @@ public class LoginController {
 
     @PostMapping("/refresh")
     public ResponseEntity<AccessTokenResponseDto> refresh(@RequestBody AccessTokenRequestDto request) {
-        Long userId = refreshTokenService.get(request.getRefreshToken());
-        if (refreshTokenService.validate(request.getRefreshToken(), userId)) {
+        Long userId = refreshTokenService.get(request.refreshToken());
+        if (refreshTokenService.validate(request.refreshToken(), userId)) {
             throw new InvalidLoginException();
         }
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(userId, request.getUserRole());
+        String newAccessToken = jwtTokenProvider.createAccessToken(userId, request.userRole());
         return ResponseEntity.ok(new AccessTokenResponseDto(newAccessToken));
     }
 
     @PostMapping("/guestLogin")
     public ResponseEntity<LoginResponseDto> guestLogin(@RequestBody @Valid GuestLoginRequestDto request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(loginService.guestLogin(request.getUuid()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(loginService.guestLogin(request.uuid()));
     }
 
 }
