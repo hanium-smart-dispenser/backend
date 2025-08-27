@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/histories")
 public class HistoryController {
 
-    private final HistoryQueryFacade historyQueryFacade;
+    private final HistoryService historyService;
 
     @GetMapping("/me")
     public Page<HistoryDto> getHistory(@AuthenticationPrincipal UserPrincipal user, Pageable pageable) {
-        return historyQueryFacade.getHistoriesByUser(user.getUserId(), pageable);
+        return historyService.getHistoriesByUser(user.getUserId(), pageable);
     }
 }
