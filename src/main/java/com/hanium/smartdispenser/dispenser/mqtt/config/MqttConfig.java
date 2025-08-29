@@ -7,19 +7,18 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.UUID;
-
 @Configuration
 public class MqttConfig {
 
     @Bean
     public MqttClient mqttClient() throws MqttException {
         String brokerUrl = "tcp://localhost:1883";
-        String clientId = "spring-client-" + UUID.randomUUID();
+        String clientId = "spring-client";
 
         MqttClient client = new MqttClient(brokerUrl, clientId, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setCleanSession(true);
+        options.setCleanSession(false);
+        options.setAutomaticReconnect(true);
 
         client.connect(options);
         return client;

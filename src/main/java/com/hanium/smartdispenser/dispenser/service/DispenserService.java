@@ -80,4 +80,8 @@ public class DispenserService {
         dispenser.assignUser(userService.findById(userId));
     }
 
+    public boolean isExist(String uuid) {
+        return dispenserRepository.existsByUuid(uuid);
+    }
+
 }

@@ -21,4 +21,6 @@ public interface DispenserRepository extends JpaRepository<Dispenser, Long>{
     @EntityGraph(attributePaths = {"dispenserSauces", "dispenserSauces.ingredient"})
     @Query("select d from Dispenser d where d.id = :id")
     Optional<Dispenser> findByIdWithSauces(Long id);
+
+    boolean existsByUuid(String uuid);
 }
