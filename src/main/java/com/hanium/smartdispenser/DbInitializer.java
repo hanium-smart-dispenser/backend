@@ -132,11 +132,23 @@ public class DbInitializer implements ApplicationRunner {
         recipeRepository.save(recipe5);
 
         // 과거 이력 저장
-        historyRepository.save(History.of(user1, d1, recipe1, LocalDateTime.now()));
-        historyRepository.save(History.of(user1, d1, recipe2, LocalDateTime.now()));
-        historyRepository.save(History.of(user1, d1, recipe3, LocalDateTime.now()));
-        historyRepository.save(History.of(user1, d1, recipe4, LocalDateTime.now()));
-        historyRepository.save(History.of(user1, d1, recipe5, LocalDateTime.now()));
+        History h1 = History.of(user1, d1, recipe1, LocalDateTime.now());
+        History h2 = History.of(user1, d1, recipe2, LocalDateTime.now());
+        History h3 = History.of(user1, d1, recipe3, LocalDateTime.now());
+        History h4 = History.of(user1, d1, recipe4, LocalDateTime.now());
+        History h5 = History.of(user1, d1, recipe5, LocalDateTime.now());
+
+        h1.markSuccess();
+        h2.markSuccess();
+        h3.markSuccess();
+        h4.markSuccess();
+        h5.markSuccess();
+
+        historyRepository.save(h1);
+        historyRepository.save(h2);
+        historyRepository.save(h3);
+        historyRepository.save(h4);
+        historyRepository.save(h5);
 
         // 즐겨 찾기 저장
         favoriteRepository.save(Favorite.of(user1, recipe1));
